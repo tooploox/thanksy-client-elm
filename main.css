@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600');
+html {
+    font-size: 1vh;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #D7EEF6;
+    font-family: 'Poppins', Arial, Helvetica Neue, Helvetica, sans-serif;
+    margin: 0;
+    color: #78a5b5;
+    padding: 0;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: none;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #78a5b5;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000;
+}
+
+*:focus {
+    outline: 0 !important;
+}
+
+.UserHeader {
+    margin-left: 4.5rem;
+    margin-right: 6rem;
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.UserHeader__Avatar {
+    margin-right: 1.5rem;
+}
+
+.UserHeader__Avatar img {
+    border-radius: 50%;
+    height: 5rem;
+    width: 5rem;
+}
+
+.UserHeader__Name {
+    font-size: 2.3rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.01rem;
+    line-height: 2.5rem;
+    font-weight: 500;
+    color: black;
+}
+
+.UserHeader__Time {
+    font-size: 1.9rem;
+    color: rgb(121, 165, 180);
+    letter-spacing: 0.025rem;
+    line-height: 2.5rem;
+}
+
+.UserHeader__Time::first-letter {
+    text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+    .UserHeader {
+        margin-left: 4rem;
+    }
+}
+
+.Reaction {
+    display: flex;
+    flex: 1;
+    flex: 0 0 5rem;
+    color: black;
+}
+
+.Reaction__Icon {
+    width: 3.1rem;
+    height: 3.1rem;
+    background-size: 3.1rem 3.1rem;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.Reaction--love .Reaction__Icon {
+    background-image: url("https://twemoji.maxcdn.com/2/72x72/2764.png")
+}
+
+.Reaction--confetti .Reaction__Icon {
+    background-image: url("https://twemoji.maxcdn.com/72x72/1f389.png")
+}
+
+.Reaction--clap .Reaction__Icon {
+    background-image: url("https://twemoji.maxcdn.com/72x72/1f44f.png")
+}
+
+.Reaction--wow .Reaction__Icon {
+    background-image: url("https://twemoji.maxcdn.com/72x72/1f62f.png")
+}
+
+.Reaction__Count {
+    line-height: 3.1rem;
+    padding-left: 2.2rem;
+}
+
+.Reactions {
+    padding: 5rem 0 0 0;
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: 500;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.Avatars__Collapsed,
+.Avatar {
+    border-radius: 50%;
+    height: 7rem;
+    width: 7rem;
+    min-width: 7rem;
+    background: #ebebeb;
+    border: .5rem solid white;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: calc(7rem *1.05) calc(7rem * 1.05);
+}
+
+.Avatars {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: flex-end;
+    align-content: stretch;
+    align-items: flex-start;
+}
+
+.Avatars__Container {
+    flex: 1;
+    flex-direction: row;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-content: stretch;
+    align-items: flex-start;
+}
+
+.Avatars__Container .Avatar {
+    margin-left: -3.7rem;
+}
+
+.Avatars__Container .Avatar:last-child {
+    margin-left: 0 !important;
+}
+
+.Avatars__Collapsed {
+    line-height: 7rem;
+    text-align: center;
+    font-weight: 500;
+    color: black;
+    font-size: 2.3rem;
+}
+
+@media (max-width: 600px) {
+    .Avatars {
+        max-width: 80vw;
+        overflow: hidden;
+    }
+}
+
+.Thx {
+    margin-left: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.Thx__Content {
+    background-color: white;
+    border-radius: 2rem;
+    margin: 1.4rem;
+    width: 60rem;
+    position: relative;
+    padding: 3em;
+    box-shadow: 0 .3rem .7rem 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+    .Thx {
+        margin: 0;
+    }
+    .Thx__Content {
+        margin: 2vw;
+        width: 83vw;
+        margin-bottom: 6rem;
+    }
+}
+
+@import "./LayoutOptions.scss";
+.TextChunks {
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    color: black;
+}
+
+.TextChunks img {
+    width: 3rem;
+    height: 3rem;
+    padding: 0 .3rem;
+}
+
+.TextChunks mark {
+    font-weight: 400;
+}
+
+.TextChunks mark:nth-of-type(1n) {
+    background: linear-gradient(to right, #fb8bab, #9c94e8 46%, #68e1ef);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.TextChunks mark:nth-of-type(2n) {
+    background: linear-gradient(to right, #5afda1, #52ccf4);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.TextChunks mark:nth-of-type(3n) {
+    background: linear-gradient(to right, #f2c250, #fe557d);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 600px) {
+    .TextChunks {
+        font-size: 2.3rem;
+    }
+}
+
+.ThxList {
+    margin-left: 1rem;
+}
+
+.ThxList__Container {
+    display: flex;
+    margin-top: 22vh;
+}
+
+.ThxList h1 {
+    margin: 0;
+    padding: 0;
+    height: 1rem;
+    padding: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    position: fixed;
+    font-size: 4rem;
+    top: 7vh;
+    left: 5rem;
+}
+
+.ThxList__EmptyContainer {
+    width: 100vw;
+    height: 90vh;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.ThxList__Empty {
+    background: url("../assets/empty.svg") center center;
+    background-size: 43.92rem 12rem;
+    width: 43.92rem;
+    font-weight: 500;
+    height: 12rem;
+}
+
+.ThxList__Title {
+    padding-top: 6rem;
+    font-size: 3.7rem;
+}
+
+.ThxList__Subtitle {
+    padding-top: .7rem;
+    font-size: 2.5rem;
+}
+
+@media (max-width: 600px) {
+    .ThxList {
+        margin-left: .5rem;
+    }
+    .ThxList__Container {
+        flex-direction: column;
+        margin-top: 7vh;
+    }
+    .ThxList h1 {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-left: 2rem
+    }
+}

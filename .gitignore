@@ -1,0 +1,15 @@
+yarn.lock
+yarn-error.log
+node_modules
+dist
+.env
+npm-debug.log
+coverage
+**/*.log
+**/*.swp
+**/*.map
+*~
+cypress/screenshots
+elm-stuff
+*lock.json
+elm.js
