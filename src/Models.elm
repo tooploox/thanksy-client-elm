@@ -6,7 +6,7 @@ import Html exposing (Html, button, div, input, p, text)
 import Html.Attributes exposing (value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Error(..), Response, get)
-import Json.Decode as Decode exposing (Decoder, field, int, string)
+import Json.Decode as Decode exposing (Decoder, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, hardcoded, required)
 import List
 import Task
@@ -55,7 +55,7 @@ thxDecoder =
         |> required "receivers" (Decode.list userDecoder)
         |> required "giver" userDecoder
         |> required "id" Decode.int
-        |> required "createdAt" Decode.string
+        |> required "created_at" Decode.string
         |> required "love_count" Decode.int
         |> required "confetti_count" Decode.int
         |> required "clap_count" Decode.int
@@ -75,7 +75,7 @@ getFeed token =
         , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
         , url = "https://thanksy.herokuapp.com/thanks/list"
         , body = Http.emptyBody
-        , expect = Http.expectJson (Decode.list thxDecoder)
+        , expect = Http.expectJson (list thxDecoder)
         , timeout = Nothing
         , withCredentials = False
         }
