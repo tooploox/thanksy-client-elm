@@ -1,18 +1,10 @@
 module Main exposing (main)
 
-import Basics
-import Bem exposing (bind, mbind)
 import Browser
 import Components exposing (thxList)
 import Html exposing (..)
-import Html.Attributes as Attr exposing (class)
-import Html.Events exposing (onClick, onInput)
 import Http
-import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline exposing (custom, hardcoded, required)
-import List exposing (..)
 import Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
-import String exposing (join, toLower)
 
 
 type alias Model =

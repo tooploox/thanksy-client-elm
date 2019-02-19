@@ -1,13 +1,8 @@
 module Components exposing (thxList)
 
-import Basics
 import Bem exposing (bind, mbind)
-import Browser
 import Html exposing (..)
 import Html.Attributes as Attr exposing (class)
-import Http
-import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline exposing (custom, hardcoded, required)
 import List exposing (..)
 import Models exposing (Msg, TextChunk(..), Thx, User, getFeed)
 import String exposing (join, toLower)

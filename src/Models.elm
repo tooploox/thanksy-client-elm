@@ -1,16 +1,8 @@
 module Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
 
-import Browser
-import Debug
-import Html exposing (Html, button, div, input, p, text)
-import Html.Attributes exposing (value)
-import Html.Events exposing (onClick, onInput)
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, hardcoded, required)
-import List
-import Task
-import Url.Builder as Url
 
 
 type alias User =
