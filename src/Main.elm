@@ -51,7 +51,8 @@ view model =
                         ""
 
                     Just error ->
-                        "Error: " ++ Debug.toString error
+                        "Error: "
+                 -- ++ Debug.toString error
                 )
     in
     div [] [ thxList model.thxList, err ]

@@ -13,3 +13,5 @@ cypress/screenshots
 elm-stuff
 *lock.json
 elm.js
+*min.js
+dist

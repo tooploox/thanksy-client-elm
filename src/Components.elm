@@ -13,7 +13,7 @@ import Models exposing (Msg, TextChunk(..), Thx, User, getFeed)
 import String exposing (join, toLower)
 
 
-thxList : List Thx -> Html Msg
+thxList : List Thx -> Html msg
 thxList ts =
     let
         ( block, element, elementTxt ) =
@@ -81,11 +81,7 @@ reactions t =
 
 avatar : User -> Html msg
 avatar u =
-    let
-        bgImg =
-            "url(" ++ u.avatarUrl ++ ")"
-    in
-    div [ class "Avatar", Attr.style "background-image" bgImg ] []
+    div [ class "Avatar", Attr.style "background-image" ("url(" ++ u.avatarUrl ++ ")") ] []
 
 
 avatars : List User -> Int -> Html msg
