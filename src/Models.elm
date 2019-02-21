@@ -1,8 +1,8 @@
 module Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
 
 import Http exposing (Error(..), Response, get)
-import Json.Decode as Decode exposing (Decoder, field, int, list, string)
-import Json.Decode.Pipeline exposing (custom, hardcoded, required)
+import Json.Decode as Decode exposing (Decoder, at, field, int, list, string)
+import Json.Decode.Pipeline exposing (custom, hardcoded, required, resolve)
 
 
 type alias User =
@@ -41,6 +41,13 @@ type alias Thx =
     }
 
 
+catDec : String -> Decoder (List TextChunk)
+catDec text =
+    Decode.map
+        (\name -> [ Text name ])
+        (field "text" string)
+
+
 thxDecoder : Decoder Thx
 thxDecoder =
     Decode.succeed Thx
@@ -52,7 +59,7 @@ thxDecoder =
         |> required "confetti_count" Decode.int
         |> required "clap_count" Decode.int
         |> required "wow_count" Decode.int
-        |> hardcoded []
+        |> custom (field "text" string |> Decode.map catDec |> resolve)
 
 
 type Msg
@@ -60,12 +67,17 @@ type Msg
     | LoadFeed (Result Http.Error (List Thx))
 
 
+api =
+    --    "https://thanksy.herokuapp.com"
+    "http://localhost:3000"
+
+
 getFeed : String -> Cmd Msg
 getFeed token =
     Http.request
         { method = "GET"
         , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
-        , url = "https://thanksy.herokuapp.com/thanks/list"
+        , url = api ++ "/thanks/list"
         , body = Http.emptyBody
         , expect = Http.expectJson (list thxDecoder)
         , timeout = Nothing

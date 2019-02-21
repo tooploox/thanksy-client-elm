@@ -1,0 +1,27 @@
+{
+  "name": "thanksy-client-elm",
+  "version": "1.0.0",
+  "description": "## before you start",
+  "main": "elm.js",
+  "dependencies": {
+    "elm": "^0.19.0-bugfix6",
+    "elm-format": "^0.8.1",
+    "node-sass": "^4.11.0",
+    "uglify-js": "^3.4.9",
+    "uglifyjs": "^2.4.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tooploox/thanksy-client-elm.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tooploox/thanksy-client-elm/issues"
+  },
+  "homepage": "https://github.com/tooploox/thanksy-client-elm#readme"
+}

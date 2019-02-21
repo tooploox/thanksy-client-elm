@@ -9,6 +9,8 @@ min="elm.min.js"
 bin="./node_modules/.bin"
 $bin/elm make src/Main.elm --optimize --output=$js $@
 $bin/uglifyjs --mangle --output=$dist/$min $js
+$bin/node-sass -r style.scss -o .
+cp style.css $dist
 
 echo "Initial size: $(cat $js | wc -c)   ($js)"
 echo "Minified size:$(cat $min | wc -c)   ($dist/$min)"

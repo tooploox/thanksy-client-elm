@@ -1,0 +1,447 @@
+$themeColor: #78a5b5;
+$transition: 250ms all ease;
+$desktopWidth: 720px;
+$mobileContentMinWidth:335px;
+$mobileContentMaxWidth:375px;
+$size: 7rem;
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600');
+html {
+    font-size: 1vh;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #D7EEF6;
+    font-family: 'Poppins', Arial, Helvetica Neue, Helvetica, sans-serif;
+    margin: 0;
+    color: #78a5b5;
+    padding: 0;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: none;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #78a5b5;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000;
+}
+
+*:focus {
+    outline: 0 !important;
+}
+
+.Avatar {
+    border-radius: 50%;
+    height: $size;
+    width: $size;
+    min-width: $size;
+    background: #ebebeb;
+    border: .5rem solid white;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: calc(#{$size} *1.05) calc(#{$size} * 1.05);
+}
+
+.Avatars {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: flex-end;
+    align-content: stretch;
+    align-items: flex-start;
+    &__Container {
+        flex: 1;
+        flex-direction: row;
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        align-content: stretch;
+        align-items: flex-start;
+        .Avatar {
+            margin-left: -3.7rem;
+        }
+        :last-child {
+            margin-left: 0 !important;
+        }
+    }
+    &__Collapsed {
+        @extend .Avatar;
+        line-height: $size;
+        text-align: center;
+        font-weight: 500;
+        color: black;
+        font-size: 2.3rem;
+    }
+    @media (max-width: $desktopWidth) {
+        max-width: 80vw;
+        overflow: hidden;
+    }
+}
+
+@mixin gradient-text($bg) {
+    background: $bg;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.Login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
+    color: black;
+    &__Logo {
+        background: url("../assets/logo.svg") bottom center no-repeat;
+        width: 20rem;
+        height: 10rem;
+        background-size: 20rem 10rem;
+    }
+    &__ContentLimiter {
+        z-index: 1;
+        max-width: 60vw;
+        max-height: 80vh;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    &__Blur {
+        background: url("../assets/bg.png") bottom center no-repeat rgb(255, 255, 255);
+        background-size: 100vw;
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    &__Mission {
+        font-size: 2.2rem;
+        font-weight: 500;
+        text-align: center;
+        @include gradient-text(linear-gradient(to right,
+        #fb8bab,
+        #9c94e8 46%,
+        #68e1ef));
+    }
+    input {
+        box-sizing: border-box;
+        color: rgb(0, 0, 0);
+        width: 36rem;
+        border-radius: .4rem;
+        background-color: rgba(235, 235, 235, .5);
+        border: none;
+        font-weight: 500;
+        line-height: 5rem;
+        font-size: 1.7rem;
+        padding: 0 1rem;
+        text-align: center;
+        margin-top: 5rem;
+        letter-spacing: .5rem;
+        font-family: 'Poppins' !important;
+    }
+    ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: rgba(0, 0, 0, .2);
+        letter-spacing: 0;
+        font-size: 1.4rem;
+        font-family: 'Poppins' !important;
+    }
+    p {
+        font-size: 1.3rem;
+        text-align: center;
+        font-weight: 600;
+        max-width: 34rem;
+        margin-bottom: 4rem;
+        margin-top: 3rem;
+    }
+    button {
+        width: 36rem;
+        height: 5rem;
+        border-radius: .4rem;
+        background-image: linear-gradient(to right, #f2c250, #fe557d);
+        border: none;
+        color: white;
+        letter-spacing: .1rem;
+        font-family: 'Poppins' !important;
+        font-size: 2rem;
+    }
+    &__Error {
+        padding-top: 2rem;
+        font-size: 1.4rem;
+        color: #fc6576;
+    }
+    @media (max-width: $desktopWidth) {
+        &__Logo {
+            width: 50vw;
+            height: 30vw;
+            background-size: 50vw 30vw;
+        }
+        &__Mission {
+            font-size: 17px;
+        }
+        p {
+            font-size: 12px;
+        }
+        input,
+        button {
+            line-height: 55px;
+            font-size: 17px;
+            height: 55px;
+        }
+        ::-webkit-input-placeholder {
+            font-size: 16px;
+        }
+    }
+}
+
+.NewThx {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__ContentLimiter {
+        max-width: 40vw;
+        max-height: 80vh;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    h2 {
+        font-size: 3rem;
+        text-align: center;
+    }
+    width: 100vw;
+    height: 100vh; // background: url("../assets/confetti.svg") bottom center no-repeat;
+    background-size: 50vw 50vw;
+    &__ConfettiContainer {
+        position: fixed;
+        bottom: 0;
+        left: 50vw;
+    }
+    &__Avatars {
+        margin-top: 1rem;
+    }
+}
+
+$size: 3.1rem;
+.Reaction {
+    display: flex;
+    flex: 1;
+    flex: 0 0 5rem;
+    color: black;
+    &__Icon {
+        width: $size;
+        height: $size;
+        background-size: $size $size;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+    &--love &__Icon {
+        background-image: url("https://twemoji.maxcdn.com/2/72x72/2764.png")
+    }
+    &--confetti &__Icon {
+        background-image: url("https://twemoji.maxcdn.com/72x72/1f389.png")
+    }
+    &--clap &__Icon {
+        background-image: url("https://twemoji.maxcdn.com/72x72/1f44f.png")
+    }
+    &--wow &__Icon {
+        background-image: url("https://twemoji.maxcdn.com/72x72/1f62f.png")
+    }
+    &__Count {
+        line-height: $size;
+        padding-left: 2.2rem;
+    }
+}
+
+.Reactions {
+    padding: 5rem 0 0 0;
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: 500;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.TextChunks {
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    color: black;
+    &--light {
+        font-weight: 300;
+        color: white;
+    }
+    &--centred {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        span {
+            text-align: center;
+            padding-left: .5rem;
+        }
+    }
+    img {
+        width: 3rem;
+        height: 3rem;
+        padding: 0 .3rem;
+    }
+    mark {
+        font-weight: 400;
+    }
+    mark:nth-of-type(1n) {
+        @include gradient-text( linear-gradient(to right,
+        #fb8bab,
+        #9c94e8 46%,
+        #68e1ef));
+    }
+    mark:nth-of-type(2n) {
+        @include gradient-text(linear-gradient(to right,
+        #5afda1,
+        #52ccf4));
+    }
+    mark:nth-of-type(3n) {
+        @include gradient-text(linear-gradient(to right,
+        #f2c250,
+        #fe557d));
+    }
+    @media (max-width: $desktopWidth) {
+        font-size: 2.3rem;
+    }
+}
+
+.Thx {
+    margin-left: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    &__Content {
+        background-color: white;
+        border-radius: 2rem;
+        margin: 1.4rem;
+        width: 60rem;
+        position: relative;
+        padding: 3em;
+        box-shadow: 0 .3rem .7rem 0 rgba(0, 0, 0, 0.1);
+    }
+    @media (max-width: $desktopWidth) {
+        margin: 0;
+        &__Content {
+            margin: 2vw;
+            width: 83vw;
+            margin-bottom: 6rem;
+        }
+    }
+}
+
+.ThxList {
+    margin-left: 1rem;
+    &__Container {
+        display: flex;
+        margin-top: 22vh;
+    }
+    h1 {
+        margin: 0;
+        padding: 0;
+        height: 1rem;
+        padding: 2rem;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        position: fixed;
+        font-size: 4rem;
+        top: 7vh;
+        left: 5rem;
+    }
+    &__EmptyContainer {
+        width: 100vw;
+        height: 90vh;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+    &__Empty {
+        background: url("../assets/empty.svg") center center;
+        background-size: 43.92rem 12rem;
+        width: 43.92rem;
+        font-weight: 500;
+        height: 12rem;
+    }
+    &__Title {
+        padding-top: 6rem;
+        font-size: 3.7rem;
+    }
+    &__Subtitle {
+        padding-top: .7rem;
+        font-size: 2.5rem;
+    }
+    @media (max-width: $desktopWidth) {
+        margin-left: .5rem;
+        &__Container {
+            flex-direction: column;
+            margin-top: 7vh;
+        }
+        h1 {
+            position: relative;
+            top: auto;
+            left: auto;
+            margin-left: 2rem
+        }
+    }
+}
+
+.UserHeader {
+    margin-left: 4.5rem;
+    margin-right: 6rem;
+    margin-bottom: 1rem;
+    display: flex;
+    &__Avatar {
+        margin-right: 1.5rem;
+        img {
+            border-radius: 50%;
+            height: 5rem;
+            width: 5rem;
+        }
+    }
+    &__Name {
+        font-size: 2.3rem;
+        margin-bottom: 0.25rem;
+        letter-spacing: 0.01rem;
+        line-height: 2.5rem;
+        font-weight: 500;
+        color: black;
+    }
+    &__Time {
+        font-size: 1.9rem;
+        color: rgb(121, 165, 180);
+        letter-spacing: 0.025rem;
+        line-height: 2.5rem;
+    }
+    &__Time::first-letter {
+        text-transform: uppercase;
+    }
+    @media (max-width: $desktopWidth) {
+        margin-left: 4rem;
+    }
+}

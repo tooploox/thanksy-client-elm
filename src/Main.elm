@@ -20,7 +20,7 @@ main =
         initialModel : Model
         initialModel =
             { thxList = []
-            , token = "1234567"
+            , token = "123456"
             , error = Nothing
             }
     in
