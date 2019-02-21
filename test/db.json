@@ -1,0 +1,63 @@
+{
+    "list":
+      [
+        {
+            "id": 1,
+            "giver": {
+                "id": "id0",
+                "name": "tomasz.k",
+                "real_name": "Tomasz K",
+                "avatar_url": "https://openclipart.org/image/2400px/svg_to_png/277087/Female-Avatar-3.png",
+                "created_at": "2019-02-01T14:37:31.852Z",
+                "updated_at": "2019-02-11T19:17:51.102Z"
+            },
+            "receivers": [
+                {
+                    "id": "id0",
+                    "name": "tomasz.k",
+                    "real_name": "Tomasz K",
+                    "avatar_url": "https://openclipart.org/image/2400px/svg_to_png/277087/Female-Avatar-3.png",
+                    "created_at": "2019-02-01T14:37:33.471Z",
+                    "updated_at": "2019-02-11T19:17:51.107Z"
+                }
+            ],
+            "love_count": 1,
+            "confetti_count": 1,
+            "clap_count": 2,
+            "wow_count": 0,
+            "text": "@tomasz.k za :chicken:",
+            "created_at": "2019-02-11T19:17:51.110Z",
+            "updated_at": "2019-02-11T19:17:51.110Z",
+            "popularity": 4
+        },
+        {
+            "id": 0,
+            "giver": {
+                "id": "id",
+                "name": "mariusz.z",
+                "real_name": "Marjanusz Z",
+                "avatar_url": "https://openclipart.org/image/2400px/svg_to_png/277087/Female-Avatar-3.png",
+                "created_at": "2019-02-01T12:23:11.632Z",
+                "updated_at": "2019-02-11T16:19:37.611Z"
+            },
+            "receivers": [
+                {
+                    "id": "id2",
+                    "name": "lukasz.cz",
+                    "real_name": "Lukasz CZ",
+                    "avatar_url": "https://openclipart.org/image/2400px/svg_to_png/277087/Female-Avatar-3.png",
+                    "created_at": "2019-02-01T14:26:28.298Z",
+                    "updated_at": "2019-02-11T16:19:37.613Z"
+                }
+            ],
+            "love_count": 0,
+            "confetti_count": 0,
+            "clap_count": 0,
+            "wow_count": 0,
+            "text": "@backendengineers for :chicken: :chicken: :slightly_smiling_face:",
+            "created_at": "2019-02-11T16:19:37.664Z",
+            "updated_at": "2019-02-11T16:19:37.664Z",
+            "popularity": 0
+        }
+    ]
+}

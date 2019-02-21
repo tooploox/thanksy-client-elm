@@ -3,7 +3,8 @@
 ## before you start
 
 ```shell
-npm install -g elm elm-test@elm-0.19.0 elm-format
+npm install
+npx elm install
 ```
 
 ## build
@@ -11,7 +12,13 @@ npm install -g elm elm-test@elm-0.19.0 elm-format
 To build everything, run:
 
 ```shell
-elm make src/Main.elm --output elm.js
+npm run build
+```
+
+To start fake API server, run:
+
+```shell
+npm run fake-api
 ```
 
 Then open `index.html` in your browser.
