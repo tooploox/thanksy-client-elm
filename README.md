@@ -1,5 +1,7 @@
 # Elm version of thanksy project - [Work in progress]
 
+[![elm version](https://img.shields.io/badge/Elm-v0.19-blue.svg?style=flat-square)](http://elm-lang.org)
+
 For more details (and the bigger picture) you can visit our [landing page](https://tooploox.github.io/thanksy/) and check out our [backend repository](https://github.com/tooploox/thanksy-server).
 
 Nevertheless, this is [thanksy client](https://tooploox.github.io/thanksy/). This project is written `Elm` (version 0.19). It was created as an experiment, to check how difictult is to rewrite `typescript` / `react` /`redux` / `redux-loop` project into Elm framework.
