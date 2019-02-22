@@ -16,3 +16,4 @@ elm.js
 *min.js
 dist
 *.css
+.cache

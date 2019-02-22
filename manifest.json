@@ -1,0 +1,14 @@
+{
+  "name": "Thanksy - We want people to be appreciated",
+  "short_name": "Thanksy",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#D7EEF6",
+  "display": "standalone",
+  "lang": "en-US",
+  "theme_color": "#78a5b5"
+}

@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "module": "esnext",
+        "target": "es5",
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true,
+        "noEmitHelpers": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strictNullChecks": true,
+        "rootDir": "src/ports/",
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "types": [
+            "jest"
+        ],
+        "lib": [
+            "dom",
+            "es2015.promise",
+            "es2015",
+            "esnext"
+        ],
+       
+        "baseUrl": "./",
+        "paths": {
+            "*": [
+                "*"
+            ]
+        },
+    },
+    "allowJS": false,
+    "include": [
+        "**/*.d.ts",
+        "**/*.tsx",
+        "**/*.ts"
+    ],
+    "exclude": [
+        "node_modules/*",
+        "dist",
+        "scripts",
+        "cypress"
+    ]
+}
