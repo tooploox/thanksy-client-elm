@@ -18,4 +18,3 @@ echo "Minified size:$(cat $min | wc -c)   ($dist/$min)"
 echo "Publishing app to /dist"
 
 cat index.html | sed -e "s/$js/$min/g" > $dist/index.html
-cp main.css  $dist
