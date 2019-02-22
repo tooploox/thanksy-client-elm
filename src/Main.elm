@@ -5,7 +5,7 @@ import Components exposing (thxList)
 import Html exposing (..)
 import Http
 import Json.Decode as Decode exposing (Value)
-import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, wheelValueToMsg)
+import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, mouseMoveToMsg)
 
 
 type alias Model =
@@ -56,27 +56,25 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Wheel v ->
+        MouseMoved (Result.Ok v) ->
             ( { model | pos = v }, Cmd.none )
 
-        NoOp ->
+        MouseMoved (Result.Err _) ->
             ( model, Cmd.none )
 
         Load ->
             ( model, getFeed model.token )
 
-        ListLoaded maybeList ->
-            case maybeList of
-                Ok thxList ->
-                    ( { model | thxList = thxList }, Cmd.none )
+        ListLoaded (Ok thxList) ->
+            ( { model | thxList = thxList }, Cmd.none )
 
-                Err err ->
-                    ( { model | thxList = [], error = Just err }, Cmd.none )
+        ListLoaded (Err err) ->
+            ( { model | thxList = [], error = Just err }, Cmd.none )
 
 
-port onWheel : (Value -> msg) -> Sub msg
+port onMouseMove : (Value -> msg) -> Sub msg
 
 
 subscriptions : model -> Sub Msg
 subscriptions _ =
-    onWheel wheelValueToMsg
+    onMouseMove mouseMoveToMsg

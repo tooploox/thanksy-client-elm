@@ -1,7 +1,7 @@
-module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, wheelValueToMsg)
+module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, mouseMoveToMsg)
 
 import Http exposing (Error(..), Response, get)
-import Json.Decode as Decode exposing (Decoder, decodeValue, field, int, list, string)
+import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, required)
 
 
@@ -22,10 +22,10 @@ type TextChunk
 userDecoder : Decoder User
 userDecoder =
     Decode.succeed User
-        |> required "real_name" Decode.string
-        |> required "avatar_url" Decode.string
-        |> required "name" Decode.string
-        |> required "id" Decode.string
+        |> required "real_name" string
+        |> required "avatar_url" string
+        |> required "name" string
+        |> required "id" string
 
 
 type alias Thx =
@@ -49,14 +49,14 @@ chunksDecoder =
 thxDecoder : Decoder Thx
 thxDecoder =
     Decode.succeed Thx
-        |> required "receivers" (Decode.list userDecoder)
+        |> required "receivers" (list userDecoder)
         |> required "giver" userDecoder
-        |> required "id" Decode.int
-        |> required "created_at" Decode.string
-        |> required "love_count" Decode.int
-        |> required "confetti_count" Decode.int
-        |> required "clap_count" Decode.int
-        |> required "wow_count" Decode.int
+        |> required "id" int
+        |> required "created_at" string
+        |> required "love_count" int
+        |> required "confetti_count" int
+        |> required "clap_count" int
+        |> required "wow_count" int
         |> custom chunksDecoder
 
 
@@ -64,36 +64,27 @@ type alias Position =
     { x : Int, y : Int }
 
 
-wheelDecoder : Decoder Position
-wheelDecoder =
-    Decode.map2 Position
-        (Decode.field "clientX" int)
-        (Decode.field "clientY" int)
+positionDecoder : Decoder Position
+positionDecoder =
+    Decode.succeed Position
+        |> required "clientX" int
+        |> required "clientY" int
 
 
-wheelValueToMsg =
-    \val ->
-        case decodeValue wheelDecoder val of
-            Ok v ->
-                Wheel v
-
-            Err _ ->
-                NoOp
+mouseMoveToMsg : Value -> Msg
+mouseMoveToMsg v =
+    decodeValue positionDecoder v |> MouseMoved
 
 
 type Msg
     = Load
     | ListLoaded (Result Error (List Thx))
-    | Wheel Position
-    | NoOp
+    | MouseMoved (Result Decode.Error Position)
 
 
 api =
-    "https://thanksy.herokuapp.com"
-
-
-
--- "http://localhost:3000"
+    --"https://thanksy.herokuapp.com"
+    "http://localhost:3000"
 
 
 getFeed : String -> Cmd Msg

@@ -27,7 +27,7 @@
     <div id="app"></div>
     <script>
       const app = Elm.Main.init({ node: document.getElementById("app") });
-      document.addEventListener("mousemove", app.ports.onWheel.send);
+      document.addEventListener("mousemove", app.ports.onMouseMove.send);
     </script>
   </body>
 </html>
