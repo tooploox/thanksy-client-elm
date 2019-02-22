@@ -41,18 +41,13 @@ type alias Thx =
     }
 
 
-
+chunksDecoder : Decoder (List TextChunk)
+chunksDecoder =
+    field "text" string |> Decode.map (\v -> [ Text v ])
 
 
 thxDecoder : Decoder Thx
 thxDecoder =
-    let 
-        chunksDecoder : String -> Decoder (List TextChunk)
-        chunksDecoder text =
-            Decode.map
-                (\name -> [ Text name ])
-                (field "text" string)
-        in
     Decode.succeed Thx
         |> required "receivers" (Decode.list userDecoder)
         |> required "giver" userDecoder
@@ -62,7 +57,7 @@ thxDecoder =
         |> required "confetti_count" Decode.int
         |> required "clap_count" Decode.int
         |> required "wow_count" Decode.int
-        |> custom (field "text" string |> Decode.map chunksDecoder |> resolve)
+        |> custom chunksDecoder
 
 
 type Msg
