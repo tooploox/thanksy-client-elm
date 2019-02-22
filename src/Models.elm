@@ -1,8 +1,8 @@
 module Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
 
 import Http exposing (Error(..), Response, get)
-import Json.Decode as Decode exposing (Decoder, at, field, int, list, string)
-import Json.Decode.Pipeline exposing (custom, hardcoded, required, resolve)
+import Json.Decode as Decode exposing (Decoder, field, int, list, string)
+import Json.Decode.Pipeline exposing (custom, required)
 
 
 type alias User =
@@ -62,7 +62,7 @@ thxDecoder =
 
 type Msg
     = Load
-    | LoadFeed (Result Http.Error (List Thx))
+    | ListLoaded (Result Error (List Thx))
 
 
 api =
@@ -81,4 +81,4 @@ getFeed token =
         , timeout = Nothing
         , withCredentials = False
         }
-        |> Http.send LoadFeed
+        |> Http.send ListLoaded

@@ -56,7 +56,7 @@ update msg model =
         Load ->
             ( model, getFeed model.token )
 
-        LoadFeed maybeList ->
+        ListLoaded maybeList ->
             case maybeList of
                 Ok thxList ->
                     ( { model | thxList = thxList }, Cmd.none )
