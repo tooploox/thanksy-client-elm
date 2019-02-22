@@ -1,7 +1,7 @@
-module Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
+module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, wheelValueToMsg)
 
 import Http exposing (Error(..), Response, get)
-import Json.Decode as Decode exposing (Decoder, field, int, list, string)
+import Json.Decode as Decode exposing (Decoder, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, required)
 
 
@@ -60,14 +60,40 @@ thxDecoder =
         |> custom chunksDecoder
 
 
+type alias Position =
+    { x : Int, y : Int }
+
+
+wheelDecoder : Decoder Position
+wheelDecoder =
+    Decode.map2 Position
+        (Decode.field "clientX" int)
+        (Decode.field "clientY" int)
+
+
+wheelValueToMsg =
+    \val ->
+        case decodeValue wheelDecoder val of
+            Ok v ->
+                Wheel v
+
+            Err _ ->
+                NoOp
+
+
 type Msg
     = Load
     | ListLoaded (Result Error (List Thx))
+    | Wheel Position
+    | NoOp
 
 
 api =
-    --    "https://thanksy.herokuapp.com"
-    "http://localhost:3000"
+    "https://thanksy.herokuapp.com"
+
+
+
+-- "http://localhost:3000"
 
 
 getFeed : String -> Cmd Msg

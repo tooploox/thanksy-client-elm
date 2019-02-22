@@ -1,16 +1,18 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser
 import Components exposing (thxList)
 import Html exposing (..)
 import Http
-import Models exposing (Msg(..), TextChunk(..), Thx, User, getFeed)
+import Json.Decode as Decode exposing (Value)
+import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, wheelValueToMsg)
 
 
 type alias Model =
     { thxList : List Thx
     , token : String
     , error : Maybe Http.Error
+    , pos : Position
     }
 
 
@@ -22,13 +24,14 @@ main =
             { thxList = []
             , token = "123456"
             , error = Nothing
+            , pos = Position 0 0
             }
     in
     Browser.element
         { init = \() -> ( initialModel, getFeed initialModel.token )
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -47,12 +50,18 @@ view model =
                  -- ++ Debug.toString error
                 )
     in
-    div [] [ thxList model.thxList, err ]
+    div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Wheel v ->
+            ( { model | pos = v }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
+
         Load ->
             ( model, getFeed model.token )
 
@@ -63,3 +72,11 @@ update msg model =
 
                 Err err ->
                     ( { model | thxList = [], error = Just err }, Cmd.none )
+
+
+port onWheel : (Value -> msg) -> Sub msg
+
+
+subscriptions : model -> Sub Msg
+subscriptions _ =
+    onWheel wheelValueToMsg
