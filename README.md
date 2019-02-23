@@ -10,25 +10,26 @@ On the one hand, [Redux](https://redux.js.org/introduction/prior-art#elm) and [R
 
 Visit original project [here](https://github.com/tooploox/thanksy-client-ts). The experiment was successful and now we have both clients with the same functionalities.
 
-## before you start
+## Setup
 
-```shell
+Install npm packages:
+
+```bash
 npm install
-npx elm install
 ```
 
-## build
+Start a local dev server
 
-To build everything, run:
-
-```shell
-npm run build
+```bash
+npm start
 ```
 
-To start fake API server, run:
+Load http://localhost:8080/
 
-```shell
-npm run fake-api
+-- OR --
+
+Bundle files for production:
+
+```bash
+npm run build # it transpiles all your Elm and ts into dist/index.bundle.js
 ```
-
-Then open `index.html` in your browser.

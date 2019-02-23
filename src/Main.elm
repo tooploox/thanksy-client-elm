@@ -5,7 +5,7 @@ import Components exposing (thxList)
 import Html exposing (..)
 import Http
 import Json.Decode as Decode exposing (Value)
-import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, mouseMoveToMsg)
+import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed)
 
 
 type alias Model =
@@ -16,26 +16,34 @@ type alias Model =
     }
 
 
-main : Program () Model Msg
+type alias Flags =
+    { token : String }
+
+
+main : Program Flags Model Msg
 main =
     let
         initialModel : Model
         initialModel =
             { thxList = []
-            , token = "123456"
+            , token = ""
             , error = Nothing
             , pos = Position 0 0
             }
+
+        init : Flags -> ( Model, Cmd Msg )
+        init flags =
+            ( { initialModel | token = flags.token }, getFeed flags.token )
     in
-    Browser.element
-        { init = \() -> ( initialModel, getFeed initialModel.token )
+    Browser.document
+        { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         }
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
     let
         err : Html err
@@ -50,7 +58,11 @@ view model =
                  -- ++ Debug.toString error
                 )
     in
-    div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ]
+    { body =
+        [ div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ]
+        ]
+    , title = ""
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,6 +77,9 @@ update msg model =
         Load ->
             ( model, getFeed model.token )
 
+        UpdatePositon v ->
+            ( { model | pos = v }, Cmd.none )
+
         ListLoaded (Ok thxList) ->
             ( { model | thxList = thxList }, Cmd.none )
 
@@ -72,9 +87,9 @@ update msg model =
             ( { model | thxList = [], error = Just err }, Cmd.none )
 
 
-port onMouseMove : (Value -> msg) -> Sub msg
+port onMouseMove : (Position -> msg) -> Sub msg
 
 
 subscriptions : model -> Sub Msg
 subscriptions _ =
-    onMouseMove mouseMoveToMsg
+    onMouseMove UpdatePositon

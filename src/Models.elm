@@ -1,4 +1,4 @@
-module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed, mouseMoveToMsg)
+module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed)
 
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
@@ -64,20 +64,20 @@ type alias Position =
     { x : Int, y : Int }
 
 
-positionDecoder : Decoder Position
-positionDecoder =
-    Decode.succeed Position
-        |> required "clientX" int
-        |> required "clientY" int
 
-
-mouseMoveToMsg : Value -> Msg
-mouseMoveToMsg v =
-    decodeValue positionDecoder v |> MouseMoved
+-- positionDecoder : Decoder Position
+-- positionDecoder =
+--     Decode.succeed Position
+--         |> required "clientX" int
+--         |> required "clientY" int
+-- mouseMoveToMsg : Value -> Msg
+-- mouseMoveToMsg v =
+--     decodeValue positionDecoder v |> MouseMoved
 
 
 type Msg
     = Load
+    | UpdatePositon Position
     | ListLoaded (Result Error (List Thx))
     | MouseMoved (Result Decode.Error Position)
 

@@ -1,9 +1,24 @@
 import { DateTime } from "luxon"
-import { remap, getter } from "./utils"
 
 const emojiRegex = require("emoji-regex")()
 const emojilib = require("emojilib")
 const twemoji = require("twemoji").default
+
+export const remap = <T, S = any>(
+    vs: SMap<T>,
+    getKey: (t: T, key: string, index: number) => string,
+    getValue: (t: T, key: string) => S,
+    skipNullValue = false
+): SMap<S> => {
+    const res: SMap<S> = {}
+    Object.keys(vs).forEach((k, index) => {
+        const value = getValue(vs[k], k)
+        if (!skipNullValue || value !== null) res[getKey(vs[k], k, index)] = value
+    })
+    return res
+}
+
+export const getter = <T, T2 extends keyof T>(obj: T, field: T2): T[T2] | null => (obj ? obj[field] : null)
 
 const emojiByName = remap<{ char: string }>(emojilib.lib, (_, name) => `:${name}:`, v => v)
 const emojiNameByUtf8 = remap<{ char: string }, string>(emojiByName, v => v.char, (_, name) => name)
@@ -12,8 +27,15 @@ const replaceEmoji = (name: string) => (emojiByName[name] ? emojiByName[name].ch
 export const replaceUtf8Emoji = (text: string) => text.replace(emojiRegex, match => emojiNameByUtf8[match] || match)
 
 export const Text = (caption: string): TextChunk => ({ type: "text", caption })
-export const Nickname = (caption: string): TextChunk => ({ type: "nickname", caption: caption === "🥳" ? "" : caption })
-export const Emoji = (caption: string, url: string = ""): TextChunk => ({ type: "emoji", caption, url })
+export const Nickname = (caption: string): TextChunk => ({
+    type: "nickname",
+    caption: caption === "🥳" ? "" : caption
+})
+export const Emoji = (caption: string, url: string = ""): TextChunk => ({
+    type: "emoji",
+    caption,
+    url
+})
 
 export const parseTextRec = (text: string, acc: TextChunk[] = []): TextChunk[] => {
     const emojiRes = /(:[a-zA-Z_0-9+-]+:)/g.exec(text)
@@ -46,7 +68,7 @@ const emojiUrl = (name: string) => `https://twemoji.maxcdn.com/2/72x72/${name}.p
 const extEmoji = ({ caption }: Emoji, name: string) =>
     Emoji(getter(emojiByName[caption], "char") || caption, emojiUrl(name))
 
-const setEmojiUrl = async (c: Emoji) => {
+const setEmojiUrl = async (c: TextChunk) => {
     if (c.type !== "emoji") return c
     const caption = replaceEmoji(c.caption)
     if (c.caption === caption) return new Promise<TextChunk>(res => res(c))
@@ -59,7 +81,12 @@ const setEmojiUrl = async (c: Emoji) => {
 }
 
 export const setEmojiUrls = async (thxs: Thx[]) =>
-    Promise.all(thxs.map(async t => ({ ...t, chunks: await Promise.all(t.chunks.map(setEmojiUrl)) })))
+    Promise.all(
+        thxs.map(async t => ({
+            ...t,
+            chunks: await Promise.all(t.chunks.map(setEmojiUrl))
+        }))
+    )
 
 export const toChunks = (id: number, text: string, createdAt: string): Thx => {
     const d = DateTime.fromISO(createdAt)
@@ -69,6 +96,3 @@ export const toChunks = (id: number, text: string, createdAt: string): Thx => {
         createdAt: `${d.toRelativeCalendar()} at ${d.toLocaleString(DateTime.TIME_SIMPLE)}`
     }
 }
-
-// tslint:disable-next-line: no-console
-console.log("hello ts")

@@ -1,6 +1,7 @@
-yarn.lock
-yarn-error.log
 node_modules
+dist
+elm-stuff
+src/*.js
 dist
 .env
 npm-debug.log
@@ -10,10 +11,6 @@ coverage
 **/*.map
 *~
 cypress/screenshots
-elm-stuff
 *lock.json
-elm.js
-*min.js
-dist
 *.css
 .cache

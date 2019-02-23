@@ -1,21 +1,13 @@
 #!/bin/sh
 
-set -e
-npx poi --prod
+set -xe
 
 dist="./dist"
-js="$dist/elm.js"
-minjs="$dist/elm.min.js"
+rm -rf $dist/*
 bin="./node_modules/.bin"
-$bin/elm make src/Main.elm --optimize --output=$js $@
-$bin/uglifyjs --mangle --output=a $js
-mv a $minjs
-$bin/node-sass -r style.scss -o .
-cp style.css $dist
-
-echo "Initial size: $(($(cat $js | wc -c)/1024)) Kb    ($js)"
-echo "Minified size: $(($(cat $minjs | wc -c)/1024)) Kb    ($minjs)"
+npx elm-typescript-interop && webpack -p
+$bin/node-sass -r src/style.scss -o .
+mv style.css $dist
 
 echo "Publishing app to $dist"
-cat $dist/index.html | sed -e 's/="\/assets/="assets/g' > a
-mv a $dist/index.html
+cat index.html | sed -e 's/.script src=.*vendors~index.bundle.*//g' > $dist/index.html

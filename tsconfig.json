@@ -1,27 +1,19 @@
 {
-    "compilerOptions": {
-        "moduleResolution": "node",
-        "module": "esnext",
-        "target": "es5",
-        "jsx": "react",
-
-        "outDir": "./dist/",
-        "rootDir": "src/ports/",
-        "baseUrl": "./",
-
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": false,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noEmitHelpers": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-
-        "types": [ "jest" ],
-        "lib": [ "dom", "es2015.promise", "es2015", "esnext"],
-    },
-    "compileOnSave": true,
-    "include": [ "src/**/*.ts"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "strict": true,
+    "sourceMap": false,
+    "types": ["jest"],
+    "lib": ["dom", "es6", "es2015.promise", "es2015", "esnext"],
+    "allowSyntheticDefaultImports": false,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noEmitHelpers": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
+  },
+  "exclude": ["node_modules", "typings", "dist"]
 }
