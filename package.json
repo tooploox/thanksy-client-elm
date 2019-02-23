@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "./build.sh",
+    "ts-watch": "npx poi --no-clean -w",
     "fake-api": "npx json-server --watch ./test/db.json --middlewares ./test/auth.js --routes ./test/routes.json"
   },
   "repository": {

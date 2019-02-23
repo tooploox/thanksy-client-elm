@@ -1,47 +1,27 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": true,
         "moduleResolution": "node",
         "module": "esnext",
         "target": "es5",
         "jsx": "react",
-        "allowSyntheticDefaultImports": true,
+
+        "outDir": "./dist/",
+        "rootDir": "src/ports/",
+        "baseUrl": "./",
+
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": false,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
         "noEmitHelpers": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "strictNullChecks": true,
-        "rootDir": "src/ports/",
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "types": [
-            "jest"
-        ],
-        "lib": [
-            "dom",
-            "es2015.promise",
-            "es2015",
-            "esnext"
-        ],
-       
-        "baseUrl": "./",
-        "paths": {
-            "*": [
-                "*"
-            ]
-        },
+
+        "types": [ "jest" ],
+        "lib": [ "dom", "es2015.promise", "es2015", "esnext"],
     },
-    "allowJS": false,
-    "include": [
-        "**/*.d.ts",
-        "**/*.tsx",
-        "**/*.ts"
-    ],
-    "exclude": [
-        "node_modules/*",
-        "dist",
-        "scripts",
-        "cypress"
-    ]
+    "compileOnSave": true,
+    "include": [ "src/**/*.ts"]
 }

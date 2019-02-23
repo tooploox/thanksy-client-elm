@@ -1,6 +1,3 @@
-// tslint:disable-next-line: no-reference
-/// <reference path="./index.d.ts" />
-
 import { DateTime } from "luxon"
 import { remap, getter } from "./utils"
 
@@ -72,6 +69,6 @@ export const toChunks = (id: number, text: string, createdAt: string): Thx => {
         createdAt: `${d.toRelativeCalendar()} at ${d.toLocaleString(DateTime.TIME_SIMPLE)}`
     }
 }
-;(window as any).toChunks = toChunks
+
 // tslint:disable-next-line: no-console
 console.log("hello ts")

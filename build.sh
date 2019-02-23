@@ -4,18 +4,17 @@ set -e
 npx poi --prod
 
 dist="./dist"
-js="elm.js"
-minName="elm.min.js"
-min="$dist/$minName"
+js="$dist/elm.js"
+minjs="$dist/elm.min.js"
 bin="./node_modules/.bin"
 $bin/elm make src/Main.elm --optimize --output=$js $@
-$bin/uglifyjs --mangle --output=$min $js
+$bin/uglifyjs --mangle --output=a $js
+mv a $minjs
 $bin/node-sass -r style.scss -o .
 cp style.css $dist
-cp $js $dist
 
-echo "Initial size: $(($(cat $js | wc -c)/1024)) Kb   ($js)"
-echo "Minified size: $(($(cat $min | wc -c)/1024)) Kb   ($min)"
+echo "Initial size: $(($(cat $js | wc -c)/1024)) Kb    ($js)"
+echo "Minified size: $(($(cat $minjs | wc -c)/1024)) Kb    ($minjs)"
 
 echo "Publishing app to $dist"
 cat $dist/index.html | sed -e 's/="\/assets/="assets/g' > a
