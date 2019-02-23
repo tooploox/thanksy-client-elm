@@ -121,25 +121,25 @@ getFeed token =
         |> Http.send ListLoaded
 
 
+textChunkDecoder : String -> Decoder TextChunk
+textChunkDecoder t =
+    case t of
+        "text" ->
+            Decode.map Text (field "caption" string)
+
+        "nickname" ->
+            Decode.map Nickname (field "caption" string)
+
+        "emoji" ->
+            Decode.map2 Emoji (field "url" string) (field "caption" string)
+
+        _ ->
+            Decode.fail ("Got invalid type: " ++ t)
+
+
 textChunksDecoder : Decoder (List TextChunk)
 textChunksDecoder =
-    let
-        decodeAction =
-            \t ->
-                case t of
-                    "text" ->
-                        Decode.map Text (field "caption" string)
-
-                    "nickname" ->
-                        Decode.map Nickname (field "caption" string)
-
-                    "emoji" ->
-                        Decode.map2 Emoji (field "caption" string) (field "url" string)
-
-                    _ ->
-                        Decode.fail ("Got invalid type: " ++ t)
-    in
-    list <| (field "type" string |> Decode.andThen decodeAction)
+    list <| (field "type" string |> Decode.andThen textChunkDecoder)
 
 
 partialThxDecoder : Decoder ThxPartial
@@ -163,14 +163,15 @@ thxPartialSub =
     getThxPartial toThxParsed
 
 
+updateThx : ThxPartial -> Thx -> Thx
+updateThx partial item =
+    if item.id == partial.id then
+        { item | chunks = partial.chunks, createdAt = partial.createdAt }
+
+    else
+        item
+
+
 updateThxList : ThxPartial -> List Thx -> List Thx
 updateThxList partial thxList =
-    let
-        update item =
-            if item.id == partial.id then
-                { item | chunks = partial.chunks, createdAt = partial.createdAt }
-
-            else
-                item
-    in
-    List.map update thxList
+    thxList |> List.map (updateThx partial)

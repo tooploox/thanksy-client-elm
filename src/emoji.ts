@@ -79,8 +79,12 @@ const setEmojiUrl = async (c: TextChunk) => {
         })
     )
 }
+export const setThxUrls = async (t: ThxPartial): Promise<ThxPartial> => {
+    const chunks: any = await Promise.all(t.chunks.map(setEmojiUrl))
+    return { ...t, chunks }
+}
 
-export const setEmojiUrls = async (thxs: Thx[]) =>
+export const setEmojiUrls = async (thxs: ThxPartial[]) =>
     Promise.all(
         thxs.map(async t => ({
             ...t,
@@ -88,10 +92,10 @@ export const setEmojiUrls = async (thxs: Thx[]) =>
         }))
     )
 
-export const toChunks = (id: number, text: string, createdAt: string): Thx => {
+export const toChunks = ({ id, body, createdAt }: ThxPartialRaw): ThxPartial => {
     const d = DateTime.fromISO(createdAt)
     return {
-        chunks: parseText(text),
+        chunks: parseText(body),
         id,
         createdAt: `${d.toRelativeCalendar()} at ${d.toLocaleString(DateTime.TIME_SIMPLE)}`
     }

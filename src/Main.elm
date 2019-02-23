@@ -12,7 +12,6 @@ type alias Model =
     { thxList : List Thx
     , token : String
     , error : Maybe Http.Error
-    , pos : Position
     }
 
 
@@ -28,7 +27,6 @@ main =
             { thxList = []
             , token = ""
             , error = Nothing
-            , pos = Position 0 0
             }
 
         init : Flags -> ( Model, Cmd Msg )
@@ -58,7 +56,7 @@ view model =
                 )
 
         body =
-            [ div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ] ]
+            [ div [] [ thxList model.thxList, err ] ]
     in
     { body = body
     , title = "Thanksy - We want people to be appreciated"
@@ -70,9 +68,6 @@ update msg model =
     case msg of
         Load ->
             ( model, getFeed model.token )
-
-        UpdatePositon v ->
-            ( { model | pos = v }, Cmd.none )
 
         ListLoaded (Ok thxList) ->
             ( { model | thxList = thxList }, Cmd.batch (List.map parse thxList) )
