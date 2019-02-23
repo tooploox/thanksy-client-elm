@@ -5,7 +5,7 @@ import Components exposing (thxList)
 import Html exposing (..)
 import Http
 import Json.Decode as Decode exposing (Value)
-import Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed)
+import Models exposing (Msg(..), Position, TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, getFeed, parse, thxPartialSub, updateThxList)
 
 
 type alias Model =
@@ -54,26 +54,20 @@ view model =
                         ""
 
                     Just error ->
-                        "Error: "
-                 -- ++ Debug.toString error
+                        "Error: " ++ Debug.toString error
                 )
+
+        body =
+            [ div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ] ]
     in
-    { body =
-        [ div [] [ thxList model.thxList, err, text (String.fromInt model.pos.x ++ "," ++ String.fromInt model.pos.y) ]
-        ]
-    , title = ""
+    { body = body
+    , title = "Thanksy - We want people to be appreciated"
     }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        MouseMoved (Result.Ok v) ->
-            ( { model | pos = v }, Cmd.none )
-
-        MouseMoved (Result.Err _) ->
-            ( model, Cmd.none )
-
         Load ->
             ( model, getFeed model.token )
 
@@ -81,10 +75,16 @@ update msg model =
             ( { model | pos = v }, Cmd.none )
 
         ListLoaded (Ok thxList) ->
-            ( { model | thxList = thxList }, Cmd.none )
+            ( { model | thxList = thxList }, Cmd.batch (List.map parse thxList) )
 
         ListLoaded (Err err) ->
             ( { model | thxList = [], error = Just err }, Cmd.none )
+
+        ThxParsed (Ok thxPartial) ->
+            ( { model | thxList = updateThxList thxPartial model.thxList }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 port onMouseMove : (Position -> msg) -> Sub msg
@@ -92,4 +92,4 @@ port onMouseMove : (Position -> msg) -> Sub msg
 
 subscriptions : model -> Sub Msg
 subscriptions _ =
-    onMouseMove UpdatePositon
+    Sub.batch [ thxPartialSub ]

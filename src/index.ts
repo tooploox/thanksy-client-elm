@@ -7,5 +7,11 @@ export const TOKEN_KEY = "ThanksyToken"
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem(TOKEN_KEY) || "123456"
     const app = Elm.Main.init({ flags: { token } })
-    document.addEventListener("mousemove", app.ports.onMouseMove.send)
+    app.ports.parseText.subscribe(d => {
+        app.ports.getThxPartial.send({
+            id: d.id,
+            createdAt: d.createdAt,
+            chunks: [{ type: "nickname", caption: d.body }]
+        })
+    })
 })

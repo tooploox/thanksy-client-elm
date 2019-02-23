@@ -9,11 +9,11 @@ export namespace Elm {
         onMouseMove: {
           send(data: { x: number; y: number }): void
         }
-        hello: {
-          subscribe(callback: (data: string) => void): void
+        parseText: {
+          subscribe(callback: (data: { id: number; createdAt: string; body: string }) => void): void
         }
-        reply: {
-          send(data: number): void
+        getThxPartial: {
+          send(data: any): void
         }
       };
     }

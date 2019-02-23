@@ -1,8 +1,15 @@
-module Models exposing (Msg(..), Position, TextChunk(..), Thx, User, getFeed)
+port module Models exposing (Msg(..), Position, TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, getFeed, parse, thxPartialSub, updateThxList)
 
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, required)
+
+
+type Msg
+    = Load
+    | UpdatePositon Position
+    | ListLoaded (Result Error (List Thx))
+    | ThxParsed (Result Decode.Error ThxPartial)
 
 
 type alias User =
@@ -41,6 +48,20 @@ type alias Thx =
     }
 
 
+type alias ThxPartialRaw =
+    { id : Int
+    , createdAt : String
+    , body : String
+    }
+
+
+type alias ThxPartial =
+    { id : Int
+    , createdAt : String
+    , chunks : List TextChunk
+    }
+
+
 chunksDecoder : Decoder (List TextChunk)
 chunksDecoder =
     field "text" string |> Decode.map (\v -> [ Text v ])
@@ -60,26 +81,25 @@ thxDecoder =
         |> custom chunksDecoder
 
 
+port parseText : ThxPartialRaw -> Cmd msg
+
+
+parse : Thx -> Cmd msg
+parse t =
+    let
+        body =
+            case List.head t.chunks of
+                Just (Text a) ->
+                    a
+
+                _ ->
+                    ""
+    in
+    parseText (ThxPartialRaw t.id t.createdAt body)
+
+
 type alias Position =
     { x : Int, y : Int }
-
-
-
--- positionDecoder : Decoder Position
--- positionDecoder =
---     Decode.succeed Position
---         |> required "clientX" int
---         |> required "clientY" int
--- mouseMoveToMsg : Value -> Msg
--- mouseMoveToMsg v =
---     decodeValue positionDecoder v |> MouseMoved
-
-
-type Msg
-    = Load
-    | UpdatePositon Position
-    | ListLoaded (Result Error (List Thx))
-    | MouseMoved (Result Decode.Error Position)
 
 
 api =
@@ -99,3 +119,58 @@ getFeed token =
         , withCredentials = False
         }
         |> Http.send ListLoaded
+
+
+textChunksDecoder : Decoder (List TextChunk)
+textChunksDecoder =
+    let
+        decodeAction =
+            \t ->
+                case t of
+                    "text" ->
+                        Decode.map Text (field "caption" string)
+
+                    "nickname" ->
+                        Decode.map Nickname (field "caption" string)
+
+                    "emoji" ->
+                        Decode.map2 Emoji (field "caption" string) (field "url" string)
+
+                    _ ->
+                        Decode.fail ("Got invalid type: " ++ t)
+    in
+    list <| (field "type" string |> Decode.andThen decodeAction)
+
+
+partialThxDecoder : Decoder ThxPartial
+partialThxDecoder =
+    Decode.succeed ThxPartial
+        |> required "id" int
+        |> required "createdAt" string
+        |> required "chunks" textChunksDecoder
+
+
+toThxParsed : Value -> Msg
+toThxParsed v =
+    v |> decodeValue partialThxDecoder |> ThxParsed
+
+
+port getThxPartial : (Decode.Value -> msg) -> Sub msg
+
+
+thxPartialSub : Sub Msg
+thxPartialSub =
+    getThxPartial toThxParsed
+
+
+updateThxList : ThxPartial -> List Thx -> List Thx
+updateThxList partial thxList =
+    let
+        update item =
+            if item.id == partial.id then
+                { item | chunks = partial.chunks, createdAt = partial.createdAt }
+
+            else
+                item
+    in
+    List.map update thxList

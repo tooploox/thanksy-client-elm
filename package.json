@@ -10,7 +10,7 @@
     "@types/webpack": "4.4.24",
     "css-loader": "2.1.0",
     "elm": "0.19.0-bugfix6",
-    "elm-format": "0.8.1",
+    "elm-format": "^0.8.1",
     "elm-hot-webpack-loader": "1.0.2",
     "elm-typescript-interop": "0.0.15",
     "elm-webpack-loader": "5.0.0",
