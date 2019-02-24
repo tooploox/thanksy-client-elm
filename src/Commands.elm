@@ -8,6 +8,7 @@ import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, partialTh
 
 type Msg
     = Load
+    | TokenChanged String
     | ListLoaded (Result Error (List Thx))
     | ThxUpdated (Result Decode.Error ThxPartial)
 

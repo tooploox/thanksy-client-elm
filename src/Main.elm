@@ -55,8 +55,8 @@ viewLogin model =
 view : Model -> Browser.Document Msg
 view model =
     { body =
-        [ if String.isEmpty model.token then
-            login "foo"
+        [ if String.length model.token < 5 then
+            login model.token ""
 
           else
             viewThxList model
@@ -79,6 +79,9 @@ update msg model =
 
         ThxUpdated (Ok thxPartial) ->
             ( { model | thxList = updateThxList thxPartial model.thxList }, Cmd.none )
+
+        TokenChanged token ->
+            ( { model | token = token }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

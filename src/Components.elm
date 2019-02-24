@@ -1,17 +1,18 @@
 module Components exposing (error, login, thxList)
 
 import Bem exposing (bind, mbind)
-import Commands exposing (Msg, getFeed)
+import Commands exposing (Msg(..), getFeed)
 import Html exposing (..)
-import Html.Attributes as Attr exposing (class)
+import Html.Attributes as Attr exposing (..)
+import Html.Events exposing (onInput)
 import Http
 import List exposing (..)
 import Models exposing (TextChunk(..), Thx, User)
 import String exposing (join, toLower)
 
 
-login : String -> Html Msg
-login _ =
+login : String -> String -> Html Msg
+login token err =
     let
         ( block, element, elementTxt ) =
             bind "Login"
@@ -19,14 +20,15 @@ login _ =
     block
         [ element "ContentLimiter"
             [ element "Logo" []
-            , elementTxt "Mission" "Improving your company's culture"
-            , -- input
-              --     ref={(input: any) => input && input.focus()}
-              --     value={p.token}
-              --     onChange={e => p.onTokenChange(e.target.value)}
-              --     placeholder="Security code"
+            , elementTxt "Mission"
+                "Improving your company's culture"
+            , input [ placeholder "Security code", value token, onInput TokenChanged ]
+                []
+            , --     onChange={e => p.onTokenChange(e.target.value)}
               -- />
-              elementTxt "Error" "foo"
+              elementTxt
+                "Error"
+                err
             , p [] [ text "Ask a person who has deployed Thanksy on the server about the security code" ]
             , button [] [ text "Login" ]
             ]
