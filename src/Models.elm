@@ -1,7 +1,7 @@
 port module Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, partialThxDecoder, thxDecoder, updateThxList)
 
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
-import Json.Decode.Pipeline exposing (custom, required)
+import Json.Decode.Pipeline exposing (custom, hardcoded, required)
 
 
 type alias User =
@@ -36,6 +36,7 @@ type alias Thx =
     , confettiCount : Int
     , clapCount : Int
     , wowCount : Int
+    , text : String
     , chunks : List TextChunk
     }
 
@@ -83,11 +84,6 @@ partialThxDecoder =
         |> required "chunks" textChunksDecoder
 
 
-fakeTextChunksDecoder : Decoder (List TextChunk)
-fakeTextChunksDecoder =
-    field "text" string |> Decode.map (\v -> [ Text v ])
-
-
 thxDecoder : Decoder Thx
 thxDecoder =
     Decode.succeed Thx
@@ -99,7 +95,8 @@ thxDecoder =
         |> required "confetti_count" int
         |> required "clap_count" int
         |> required "wow_count" int
-        |> custom fakeTextChunksDecoder
+        |> required "text" string
+        |> hardcoded []
 
 
 updateThx : ThxPartial -> Thx -> Thx

@@ -21,22 +21,23 @@ type alias ElementText msg =
 blockClass : List String -> String -> String
 blockClass modifiers block =
     let
-        toClass =
+        className =
             \m -> join "--" [ block, m ]
     in
-    block ++ " " ++ (List.map toClass modifiers |> join " ") |> String.trim
+    block ++ " " ++ (List.map className modifiers |> join " ") |> String.trim
+
+
+element : String -> Element msg
+element name =
+    \p -> div [ name ++ "__" ++ p |> class ]
 
 
 mbind : List String -> String -> ( Block msg, Element msg, ElementText msg )
 mbind modifiers name =
-    let
-        block =
-            div [ class (blockClass modifiers name) ]
-
-        element =
-            \p -> div [ name ++ "__" ++ p |> class ]
-    in
-    ( block, element, \p -> \txt -> element p [ text txt ] )
+    ( div [ class (blockClass modifiers name) ]
+    , element name
+    , \p -> \txt -> element name p [ text txt ]
+    )
 
 
 bind =

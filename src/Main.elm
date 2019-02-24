@@ -1,8 +1,8 @@
 port module Main exposing (main)
 
 import Browser
-import Commands exposing (Msg(..), getFeed, parse, subscriptions)
-import Components exposing (error, thxList)
+import Commands exposing (Msg(..), getFeed, getThxUpdateCmd, subscriptions)
+import Components exposing (error, login, thxList)
 import Html exposing (..)
 import Http
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
@@ -47,9 +47,20 @@ viewThxList model =
     div [] [ thxList model.thxList, text (error model.error) ]
 
 
+viewLogin : Model -> Html Msg
+viewLogin model =
+    div [] [ thxList model.thxList, text (error model.error) ]
+
+
 view : Model -> Browser.Document Msg
 view model =
-    { body = [ viewThxList model ]
+    { body =
+        [ if String.isEmpty model.token then
+            login "foo"
+
+          else
+            viewThxList model
+        ]
     , title = "Thanksy - We want people to be appreciated"
     }
 
@@ -61,12 +72,12 @@ update msg model =
             ( model, getFeed model.token )
 
         ListLoaded (Ok thxList) ->
-            ( { model | thxList = thxList }, Cmd.batch (List.map parse thxList) )
+            ( { model | thxList = thxList }, Cmd.batch (List.map getThxUpdateCmd thxList) )
 
         ListLoaded (Err err) ->
             ( { model | thxList = [], error = Just err }, Cmd.none )
 
-        ThxParsed (Ok thxPartial) ->
+        ThxUpdated (Ok thxPartial) ->
             ( { model | thxList = updateThxList thxPartial model.thxList }, Cmd.none )
 
         _ ->

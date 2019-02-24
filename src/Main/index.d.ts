@@ -6,10 +6,10 @@ export namespace Elm {
   namespace Main {
     export interface App {
       ports: {
-        parseText: {
+        getThxUpdate: {
           subscribe(callback: (data: { id: number; createdAt: string; body: string }) => void): void
         }
-        getThxPartial: {
+        updateThx: {
           send(data: any): void
         }
       };

@@ -1,4 +1,4 @@
-module Components exposing (error, thxList)
+module Components exposing (error, login, thxList)
 
 import Bem exposing (bind, mbind)
 import Commands exposing (Msg, getFeed)
@@ -10,6 +10,30 @@ import Models exposing (TextChunk(..), Thx, User)
 import String exposing (join, toLower)
 
 
+login : String -> Html Msg
+login _ =
+    let
+        ( block, element, elementTxt ) =
+            bind "Login"
+    in
+    block
+        [ element "ContentLimiter"
+            [ element "Logo" []
+            , elementTxt "Mission" "Improving your company's culture"
+            , -- input
+              --     ref={(input: any) => input && input.focus()}
+              --     value={p.token}
+              --     onChange={e => p.onTokenChange(e.target.value)}
+              --     placeholder="Security code"
+              -- />
+              elementTxt "Error" "foo"
+            , p [] [ text "Ask a person who has deployed Thanksy on the server about the security code" ]
+            , button [] [ text "Login" ]
+            ]
+        , element "Blur" []
+        ]
+
+
 thxList : List Thx -> Html msg
 thxList ts =
     let
@@ -17,9 +41,19 @@ thxList ts =
             bind "ThxList"
     in
     block
-        [ h1 [] [ text "Recent thanks" ]
-        , element "Container" (List.map thx ts)
-        ]
+        (if List.isEmpty ts then
+            [ element "EmptyContainer"
+                [ element "Empty" []
+                , elementTxt "Title" "No thanks so far"
+                , elementTxt "Subtitle" "Be the first one, use Slack, speak up!"
+                ]
+            ]
+
+         else
+            [ h1 [] [ text "Recent thanks" ]
+            , element "Container" (List.map thx ts)
+            ]
+        )
 
 
 thx : Thx -> Html msg
@@ -121,4 +155,4 @@ error me =
             ""
 
         Just e ->
-            "Error: " ++ Debug.toString error
+            "Error: " ++ Debug.toString e
