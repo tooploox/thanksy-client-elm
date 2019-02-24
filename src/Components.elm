@@ -1,9 +1,10 @@
-module Components exposing (thxList)
+module Components exposing (error, thxList)
 
 import Bem exposing (bind, mbind)
 import Commands exposing (Msg, getFeed)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (class)
+import Http
 import List exposing (..)
 import Models exposing (TextChunk(..), Thx, User)
 import String exposing (join, toLower)
@@ -111,3 +112,13 @@ textChunk t =
 textChunks : List TextChunk -> Html msg
 textChunks chunks =
     div [ class "TextChunks" ] (List.map textChunk chunks)
+
+
+error : Maybe Http.Error -> String
+error me =
+    case me of
+        Nothing ->
+            ""
+
+        Just e ->
+            "Error: " ++ Debug.toString error

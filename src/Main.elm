@@ -2,10 +2,9 @@ port module Main exposing (main)
 
 import Browser
 import Commands exposing (Msg(..), getFeed, parse, subscriptions)
-import Components exposing (thxList)
+import Components exposing (error, thxList)
 import Html exposing (..)
 import Http
-import Json.Decode as Decode exposing (Value)
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
 
 
@@ -43,19 +42,9 @@ main =
         }
 
 
-getError : Maybe Http.Error -> String
-getError err =
-    case err of
-        Nothing ->
-            ""
-
-        Just error ->
-            "Error: " ++ Debug.toString error
-
-
 viewThxList : Model -> Html Msg
 viewThxList model =
-    div [] [ thxList model.thxList, text (getError model.error) ]
+    div [] [ thxList model.thxList, text (error model.error) ]
 
 
 view : Model -> Browser.Document Msg
