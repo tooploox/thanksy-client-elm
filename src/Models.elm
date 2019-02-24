@@ -1,15 +1,7 @@
-port module Models exposing (Msg(..), Position, TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, getFeed, parse, thxPartialSub, updateThxList)
+port module Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, partialThxDecoder, thxDecoder, updateThxList)
 
-import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, required)
-
-
-type Msg
-    = Load
-    | UpdatePositon Position
-    | ListLoaded (Result Error (List Thx))
-    | ThxParsed (Result Decode.Error ThxPartial)
 
 
 type alias User =
@@ -62,65 +54,6 @@ type alias ThxPartial =
     }
 
 
-chunksDecoder : Decoder (List TextChunk)
-chunksDecoder =
-    field "text" string |> Decode.map (\v -> [ Text v ])
-
-
-thxDecoder : Decoder Thx
-thxDecoder =
-    Decode.succeed Thx
-        |> required "receivers" (list userDecoder)
-        |> required "giver" userDecoder
-        |> required "id" int
-        |> required "created_at" string
-        |> required "love_count" int
-        |> required "confetti_count" int
-        |> required "clap_count" int
-        |> required "wow_count" int
-        |> custom chunksDecoder
-
-
-port parseText : ThxPartialRaw -> Cmd msg
-
-
-parse : Thx -> Cmd msg
-parse t =
-    let
-        body =
-            case List.head t.chunks of
-                Just (Text a) ->
-                    a
-
-                _ ->
-                    ""
-    in
-    parseText (ThxPartialRaw t.id t.createdAt body)
-
-
-type alias Position =
-    { x : Int, y : Int }
-
-
-api =
-    --"https://thanksy.herokuapp.com"
-    "http://localhost:3000"
-
-
-getFeed : String -> Cmd Msg
-getFeed token =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
-        , url = api ++ "/thanks/list"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (list thxDecoder)
-        , timeout = Nothing
-        , withCredentials = False
-        }
-        |> Http.send ListLoaded
-
-
 textChunkDecoder : String -> Decoder TextChunk
 textChunkDecoder t =
     case t of
@@ -150,23 +83,29 @@ partialThxDecoder =
         |> required "chunks" textChunksDecoder
 
 
-toThxParsed : Value -> Msg
-toThxParsed v =
-    v |> decodeValue partialThxDecoder |> ThxParsed
+fakeTextChunksDecoder : Decoder (List TextChunk)
+fakeTextChunksDecoder =
+    field "text" string |> Decode.map (\v -> [ Text v ])
 
 
-port getThxPartial : (Decode.Value -> msg) -> Sub msg
-
-
-thxPartialSub : Sub Msg
-thxPartialSub =
-    getThxPartial toThxParsed
+thxDecoder : Decoder Thx
+thxDecoder =
+    Decode.succeed Thx
+        |> required "receivers" (list userDecoder)
+        |> required "giver" userDecoder
+        |> required "id" int
+        |> required "created_at" string
+        |> required "love_count" int
+        |> required "confetti_count" int
+        |> required "clap_count" int
+        |> required "wow_count" int
+        |> custom fakeTextChunksDecoder
 
 
 updateThx : ThxPartial -> Thx -> Thx
-updateThx partial item =
-    if item.id == partial.id then
-        { item | chunks = partial.chunks, createdAt = partial.createdAt }
+updateThx p item =
+    if item.id == p.id then
+        { item | chunks = p.chunks, createdAt = p.createdAt }
 
     else
         item

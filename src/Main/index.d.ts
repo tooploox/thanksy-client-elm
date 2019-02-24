@@ -6,9 +6,6 @@ export namespace Elm {
   namespace Main {
     export interface App {
       ports: {
-        onMouseMove: {
-          send(data: { x: number; y: number }): void
-        }
         parseText: {
           subscribe(callback: (data: { id: number; createdAt: string; body: string }) => void): void
         }

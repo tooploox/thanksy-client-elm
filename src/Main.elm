@@ -1,11 +1,12 @@
 port module Main exposing (main)
 
 import Browser
+import Commands exposing (Msg(..), getFeed, parse, subscriptions)
 import Components exposing (thxList)
 import Html exposing (..)
 import Http
 import Json.Decode as Decode exposing (Value)
-import Models exposing (Msg(..), Position, TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, getFeed, parse, thxPartialSub, updateThxList)
+import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
 
 
 type alias Model =
@@ -19,20 +20,21 @@ type alias Flags =
     { token : String }
 
 
+initialModel : Model
+initialModel =
+    { thxList = []
+    , token = ""
+    , error = Nothing
+    }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { initialModel | token = flags.token }, getFeed flags.token )
+
+
 main : Program Flags Model Msg
 main =
-    let
-        initialModel : Model
-        initialModel =
-            { thxList = []
-            , token = ""
-            , error = Nothing
-            }
-
-        init : Flags -> ( Model, Cmd Msg )
-        init flags =
-            ( { initialModel | token = flags.token }, getFeed flags.token )
-    in
     Browser.document
         { init = init
         , view = view
@@ -41,24 +43,24 @@ main =
         }
 
 
+getError : Maybe Http.Error -> String
+getError err =
+    case err of
+        Nothing ->
+            ""
+
+        Just error ->
+            "Error: " ++ Debug.toString error
+
+
+viewThxList : Model -> Html Msg
+viewThxList model =
+    div [] [ thxList model.thxList, text (getError model.error) ]
+
+
 view : Model -> Browser.Document Msg
 view model =
-    let
-        err : Html err
-        err =
-            text
-                (case model.error of
-                    Nothing ->
-                        ""
-
-                    Just error ->
-                        "Error: " ++ Debug.toString error
-                )
-
-        body =
-            [ div [] [ thxList model.thxList, err ] ]
-    in
-    { body = body
+    { body = [ viewThxList model ]
     , title = "Thanksy - We want people to be appreciated"
     }
 
@@ -80,11 +82,3 @@ update msg model =
 
         _ ->
             ( model, Cmd.none )
-
-
-port onMouseMove : (Position -> msg) -> Sub msg
-
-
-subscriptions : model -> Sub Msg
-subscriptions _ =
-    Sub.batch [ thxPartialSub ]

@@ -1,10 +1,11 @@
 module Components exposing (thxList)
 
 import Bem exposing (bind, mbind)
+import Commands exposing (Msg, getFeed)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (class)
 import List exposing (..)
-import Models exposing (Msg, TextChunk(..), Thx, User, getFeed)
+import Models exposing (TextChunk(..), Thx, User)
 import String exposing (join, toLower)
 
 
