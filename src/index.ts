@@ -1,13 +1,15 @@
 import { Elm } from "./Main"
+import { toChunks, setThxUrls } from "./emoji"
 
 import "./style.scss"
-import { toChunks, setThxUrls } from "./emoji"
 
 export const TOKEN_KEY = "ThanksyToken"
 
 const init = () => {
-    const token = localStorage.getItem(TOKEN_KEY) || "12345"
-    const app = Elm.Main.init({ flags: { token, apiUrl: "http://localhost:3000" } })
+    const token = localStorage.getItem(TOKEN_KEY) || ""
+    const apiUrl = process.env.API_URL || ""
+    console.log(apiUrl)
+    const app = Elm.Main.init({ flags: { token, apiUrl } })
 
     app.ports.getThxUpdate.subscribe(async d => {
         const withUrls = await setThxUrls(toChunks(d))

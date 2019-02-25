@@ -20,6 +20,12 @@ Install npm packages:
 npm install
 ```
 
+then copy `.env-example` to `.env`:
+
+```sh
+cp .env-example .env
+```
+
 Start a local dev server
 
 ```bash

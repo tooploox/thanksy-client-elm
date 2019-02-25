@@ -1,8 +1,11 @@
 const webpack = require("webpack")
 const path = require("path")
+const Dotenv = require("dotenv-webpack")
+
 const MODE = process.env.npm_lifecycle_event === "build" ? "production" : "development"
+
 console.log({ MODE, npm: process.env.npm_lifecycle_event })
-module.exports = function(env) {
+module.exports = function() {
     return {
         mode: MODE,
         entry: {
@@ -25,12 +28,13 @@ module.exports = function(env) {
         plugins:
             MODE === "development"
                 ? [
+                      new Dotenv(),
                       // Suggested for hot-loading
                       new webpack.NamedModulesPlugin(),
                       // Prevents compilation errors causing the hot loader to lose state
                       new webpack.NoEmitOnErrorsPlugin()
                   ]
-                : [],
+                : [new Dotenv()],
         module: {
             rules: [
                 {

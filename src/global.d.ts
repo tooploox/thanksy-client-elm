@@ -1,5 +1,5 @@
 declare var require: any
-
+declare var process: any
 type TMap<TKey extends string, TValue> = { [K in TKey]: TValue }
 type SMap<TValue> = TMap<string, TValue>
 type Emoji = { type: "emoji"; url: string; caption: string }
