@@ -14,6 +14,8 @@ const remap = <T, S>(vs: SMap<T>, toKey: (t: T, k: string) => string, toValue: (
     return res
 }
 
+export const extend = <T>(obj: T) => (delta: Partial<T>): T => ({ ...obj, ...delta })
+
 type EmojiObj = { char: string }
 const emojiByName = remap<EmojiObj, EmojiObj>(emojilib.lib, (_, name) => `:${name}:`, v => v)
 const emojiNameByUtf8 = remap<EmojiObj, string>(emojiByName, v => v.char, (_, name) => name)
@@ -21,13 +23,10 @@ const emojiNameByUtf8 = remap<EmojiObj, string>(emojiByName, v => v.char, (_, na
 const replaceEmoji = (name: string) => (emojiByName[name] ? emojiByName[name].char : name)
 const replaceUtf8Emoji = (text: string) => text.replace(emojiRegex, match => emojiNameByUtf8[match] || match)
 
-const emojiReg = /(:[a-zA-Z_0-9+-]+:)/g
-const nicknameReg = /(@[a-zA-Z_0-9.-]+)/g
-
 const parseTextRec = (text: string, acc: TextChunk[] = []): TextChunk[] => {
-    const emojiRes = emojiReg.exec(text)
+    const emojiRes = /(:[a-zA-Z_0-9+-]+:)/g.exec(text)
     const emojiIndex = emojiRes ? text.indexOf(emojiRes[0]) : -1
-    const nicknameRes = nicknameReg.exec(text)
+    const nicknameRes = /(@[a-zA-Z_0-9.-]+)/g.exec(text)
     const nicknameIndex = nicknameRes ? text.indexOf(nicknameRes[0]) : -1
 
     if (emojiRes && (emojiIndex < nicknameIndex || nicknameIndex === -1)) {
@@ -45,28 +44,23 @@ const parseTextRec = (text: string, acc: TextChunk[] = []): TextChunk[] => {
 }
 
 const parseText = (text: string, acc: TextChunk[] = []) => parseTextRec(replaceUtf8Emoji(text), acc)
-
 const emojiUrl = (name: string) => `https://twemoji.maxcdn.com/2/72x72/${name}.png`
-
 const getter = <T, T2 extends keyof T>(obj: T, field: T2): T[T2] | null => (obj ? obj[field] : null)
-const extEmoji = ({ caption }: Emoji, name: string) =>
+const extEmoji = ({ caption }: Emoji, name: string): TextChunk =>
     Emoji(getter(emojiByName[caption], "char") || caption, emojiUrl(name))
 
 const setEmojiUrl = async (c: TextChunk) => {
     if (c.type !== "emoji") return c
     const caption = replaceEmoji(c.caption)
     if (c.caption === caption) return new Promise<TextChunk>(res => res(c))
-    return new Promise(res =>
+    return new Promise<TextChunk>(res =>
         twemoji.parse(caption, {
             callback: (name: string) => res(extEmoji(c, name)),
             onerror: () => res(c)
         })
     )
 }
-export const setThxUrls = async (t: ThxPartial) => ({
-    ...t,
-    chunks: (await Promise.all(t.chunks.map(setEmojiUrl))) as any
-})
+export const setThxUrls = async (t: ThxPartial) => extend(t)({ chunks: await Promise.all(t.chunks.map(setEmojiUrl)) })
 
 const toRelativeDate = (s: string) =>
     (d => `${d.toRelativeCalendar()} at ${d.toLocaleString(DateTime.TIME_SIMPLE)}`)(DateTime.fromISO(s))

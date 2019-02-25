@@ -1,9 +1,10 @@
-port module Commands exposing (Msg(..), getFeed, getThxUpdateCmd, subscriptions)
+port module Commands exposing (Msg(..), getFeed, getFeedSub, getThxUpdateCmd, updateThxSub)
 
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, required)
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, partialThxDecoder, thxDecoder)
+import Time exposing (every)
 
 
 type Msg
@@ -32,6 +33,11 @@ getFeed token =
         |> Http.send ListLoaded
 
 
+getFeedSub : String -> Sub Msg
+getFeedSub token =
+    every 7000 (\_ -> Load)
+
+
 port getThxUpdate : ThxPartialRaw -> Cmd msg
 
 
@@ -43,6 +49,6 @@ getThxUpdateCmd t =
 port updateThx : (Decode.Value -> msg) -> Sub msg
 
 
-subscriptions : model -> Sub Msg
-subscriptions _ =
-    Sub.batch [ updateThx (\v -> v |> decodeValue partialThxDecoder |> ThxUpdated) ]
+updateThxSub : Sub Msg
+updateThxSub =
+    updateThx (\v -> v |> decodeValue partialThxDecoder |> ThxUpdated)

@@ -1,7 +1,7 @@
 port module Main exposing (main)
 
 import Browser
-import Commands exposing (Msg(..), getFeed, getThxUpdateCmd, subscriptions)
+import Commands exposing (Msg(..), getFeed, getFeedSub, getThxUpdateCmd, updateThxSub)
 import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
 import Http
@@ -50,7 +50,7 @@ view model =
                 [ login model.token "" ]
 
             Just t ->
-                [ thxList model.thxList, newThx t ]
+                [ thxList model.thxList ]
     , title = "Thanksy - We want people to be appreciated"
     }
 
@@ -75,3 +75,11 @@ update msg model =
 
         _ ->
             ( model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ updateThxSub
+        , getFeedSub model.token
+        ]
