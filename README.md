@@ -12,7 +12,6 @@ The experiment was successful and we have `two thanksy clients` with the same se
 
 ![elm thanksy client](assets/newThx.png)
 
-
 ## Setup
 
 Install npm packages:
@@ -36,4 +35,3 @@ Bundle files for production:
 ```bash
 npm run build # it transpiles all your Elm and ts into dist/index.bundle.js
 ```
-![elm thanksy client](assets/thxList.png)

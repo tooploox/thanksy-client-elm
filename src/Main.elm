@@ -50,7 +50,7 @@ view model =
                 [ login model.token "" ]
 
             Just t ->
-                [ thxList model.thxList ]
+                [ thxList model.thxList, newThx t ]
     , title = "Thanksy - We want people to be appreciated"
     }
 

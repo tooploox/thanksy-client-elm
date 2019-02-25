@@ -9,6 +9,7 @@ import Http
 import List exposing (..)
 import Models exposing (TextChunk(..), Thx, User)
 import String exposing (join, toLower)
+import String.Extra exposing (softBreak)
 
 
 login : String -> String -> Html Msg
@@ -39,7 +40,7 @@ newThx t =
     block
         [ element "Overlay"
             [ element "ContentLimiter"
-                [ h2 [] [ text (t.giver.realName ++ " just sent a new Thanks!") ]
+                [ h2 [] [ text (firstWord t.giver.realName ++ " just sent a new Thanks!") ]
                 , textChunks t.chunks True
                 , element "Avatars" [ avatars t.receivers 11 ]
                 , element "ConfettiContainer" []
@@ -178,3 +179,17 @@ error me =
 
         Just e ->
             "Error: " ++ Debug.toString e
+
+
+firstWord : String -> String
+firstWord s =
+    let
+        arr =
+            softBreak 2 s
+    in
+    case List.head arr of
+        Just v ->
+            v
+
+        _ ->
+            ""
