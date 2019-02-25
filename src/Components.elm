@@ -4,7 +4,7 @@ import Bem exposing (bind, mbind, mblock)
 import Commands exposing (Msg(..), getFeed)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick, onInput)
 import Http
 import List exposing (..)
 import Models exposing (TextChunk(..), Thx, User)
@@ -25,7 +25,7 @@ login token err =
             , input [ placeholder "Security code", value token, onInput TokenChanged ] []
             , elementTxt "Error" err
             , p [] [ text "Ask a person who has deployed Thanksy on the server about the security code" ]
-            , button [] [ text "Login" ]
+            , button [ onClick Login ] [ text "Login" ]
             ]
         , element "Blur" []
         ]

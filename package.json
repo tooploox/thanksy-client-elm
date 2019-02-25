@@ -37,6 +37,7 @@
     "webpack-serve": "2.0.3"
   },
   "scripts": {
+    "gen-types" : "npx elm-typescript-interop",
     "start": "npx elm-typescript-interop && webpack-serve --open",
     "build": "./build.sh",
     "fake-api": "npx json-server --watch ./test/db.json --middlewares ./test/auth.js --routes ./test/routes.json"
@@ -52,4 +53,3 @@
   },
   "homepage": "https://github.com/tooploox/thanksy-client-elm#readme"
 }
-    

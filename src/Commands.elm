@@ -1,4 +1,4 @@
-port module Commands exposing (Msg(..), getFeed, getFeedSub, getThxUpdateCmd, updateThxSub)
+port module Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateThxSub)
 
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
@@ -10,21 +10,17 @@ import Time exposing (every)
 type Msg
     = Load
     | TokenChanged String
+    | Login
     | ListLoaded (Result Error (List Thx))
     | ThxUpdated (Result Decode.Error ThxPartial)
 
 
-api =
-    --"https://thanksy.herokuapp.com"
-    "http://localhost:3000"
-
-
-getFeed : String -> Cmd Msg
-getFeed token =
+getFeed : String -> String -> Cmd Msg
+getFeed apiUrl token =
     Http.request
         { method = "GET"
         , headers = [ Http.header "Authorization" ("Bearer " ++ token) ]
-        , url = api ++ "/thanks/list"
+        , url = apiUrl ++ "/thanks/list"
         , body = Http.emptyBody
         , expect = Http.expectJson (list thxDecoder)
         , timeout = Nothing
@@ -35,7 +31,7 @@ getFeed token =
 
 getFeedSub : String -> Sub Msg
 getFeedSub token =
-    every 7000 (\_ -> Load)
+    every 4000 (\_ -> Load)
 
 
 port getThxUpdate : ThxPartialRaw -> Cmd msg
@@ -52,3 +48,23 @@ port updateThx : (Decode.Value -> msg) -> Sub msg
 updateThxSub : Sub Msg
 updateThxSub =
     updateThx (\v -> v |> decodeValue partialThxDecoder |> ThxUpdated)
+
+
+type ApiState
+    = Empty
+    | TokenNotChecked
+    | InvalidToken
+    | NoResponse
+
+
+toApiState : Error -> ApiState
+toApiState err =
+    case err of
+        BadStatus _ ->
+            InvalidToken
+
+        _ ->
+            NoResponse
+
+
+port setToken : String -> Cmd msg

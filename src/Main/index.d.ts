@@ -12,11 +12,14 @@ export namespace Elm {
         updateThx: {
           send(data: any): void
         }
+        setToken: {
+          subscribe(callback: (data: string) => void): void
+        }
       };
     }
     export function init(options: {
       node?: HTMLElement | null;
-      flags: { token: string };
+      flags: { token: string; apiUrl: string };
     }): Elm.Main.App;
   }
 }

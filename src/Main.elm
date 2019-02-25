@@ -1,35 +1,41 @@
 port module Main exposing (main)
 
 import Browser
-import Commands exposing (Msg(..), getFeed, getFeedSub, getThxUpdateCmd, updateThxSub)
+import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateThxSub)
 import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
-import Http
+import Http exposing (Error(..))
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
 
 
 type alias Model =
     { thxList : List Thx
     , token : String
-    , error : Maybe Http.Error
+    , isTokenFresh : Bool
+    , apiUrl : String
+    , apiState : ApiState
+    , apiError : Maybe Error
     }
 
 
 type alias Flags =
-    { token : String }
+    { token : String, apiUrl : String }
 
 
 initialModel : Model
 initialModel =
     { thxList = []
     , token = ""
-    , error = Nothing
+    , isTokenFresh = True
+    , apiState = Empty
+    , apiError = Nothing
+    , apiUrl = ""
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { initialModel | token = flags.token }, getFeed flags.token )
+    ( { initialModel | token = flags.token, apiUrl = flags.apiUrl }, getFeed flags.apiUrl flags.token )
 
 
 main : Program Flags Model Msg
@@ -42,12 +48,24 @@ main =
         }
 
 
+toError : Model -> String
+toError model =
+    if model.apiState == NoResponse then
+        "No API response. Are we online?"
+
+    else if model.apiState == InvalidToken && not model.isTokenFresh && not (String.isEmpty model.token) then
+        "Security code is not valid"
+
+    else
+        ""
+
+
 view : Model -> Browser.Document Msg
 view model =
     { body =
         case List.head model.thxList of
             Nothing ->
-                [ login model.token "" ]
+                [ login model.token (toError model) ]
 
             Just t ->
                 [ thxList model.thxList ]
@@ -58,20 +76,27 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        TokenChanged token ->
+            ( { model | token = token, isTokenFresh = True }, setToken token )
+
+        Login ->
+            ( { model | apiState = TokenNotChecked }, getFeed model.apiUrl model.token )
+
         Load ->
-            ( model, getFeed model.token )
+            if model.apiState == Empty || model.apiState == TokenNotChecked then
+                ( { model | isTokenFresh = False }, getFeed model.apiUrl model.token )
+
+            else
+                ( model, Cmd.none )
 
         ListLoaded (Ok thxList) ->
-            ( { model | thxList = thxList }, Cmd.batch (List.map getThxUpdateCmd thxList) )
+            ( { model | thxList = thxList, apiState = Empty, isTokenFresh = False }, Cmd.batch (List.map getThxUpdateCmd thxList) )
 
         ListLoaded (Err err) ->
-            ( { model | thxList = [], error = Just err }, Cmd.none )
+            ( { model | isTokenFresh = False, thxList = [], apiError = Just err, apiState = toApiState err }, Cmd.none )
 
         ThxUpdated (Ok thxPartial) ->
             ( { model | thxList = updateThxList thxPartial model.thxList }, Cmd.none )
-
-        TokenChanged token ->
-            ( { model | token = token }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
