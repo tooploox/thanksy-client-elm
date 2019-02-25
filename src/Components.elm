@@ -1,6 +1,6 @@
-module Components exposing (error, login, thxList)
+module Components exposing (error, login, newThx, thxList)
 
-import Bem exposing (bind, mbind)
+import Bem exposing (bind, mbind, mblock)
 import Commands exposing (Msg(..), getFeed)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
@@ -20,19 +20,31 @@ login token err =
     block
         [ element "ContentLimiter"
             [ element "Logo" []
-            , elementTxt "Mission"
-                "Improving your company's culture"
-            , input [ placeholder "Security code", value token, onInput TokenChanged ]
-                []
-            , --     onChange={e => p.onTokenChange(e.target.value)}
-              -- />
-              elementTxt
-                "Error"
-                err
+            , elementTxt "Mission" "Improving your company's culture"
+            , input [ placeholder "Security code", value token, onInput TokenChanged ] []
+            , elementTxt "Error" err
             , p [] [ text "Ask a person who has deployed Thanksy on the server about the security code" ]
             , button [] [ text "Login" ]
             ]
         , element "Blur" []
+        ]
+
+
+newThx : Thx -> Html msg
+newThx t =
+    let
+        ( block, element, elementTxt ) =
+            bind "NewThx"
+    in
+    block
+        [ element "Overlay"
+            [ element "ContentLimiter"
+                [ h2 [] [ text (t.giver.realName ++ " just sent a new Thanks!") ]
+                , textChunks t.chunks True
+                , element "Avatars" [ avatars t.receivers 11 ]
+                , element "ConfettiContainer" []
+                ]
+            ]
         ]
 
 
@@ -67,7 +79,7 @@ thx t =
     div [ class "Thx", Attr.id ("thx" ++ String.fromInt t.id) ]
         [ userHeader t.giver t.createdAt
         , element "Content"
-            [ textChunks t.chunks
+            [ textChunks t.chunks False
             , avatars t.receivers 5
             , reactions t
             ]
@@ -145,9 +157,17 @@ textChunk t =
             img [ Attr.src url, Attr.alt caption ] []
 
 
-textChunks : List TextChunk -> Html msg
-textChunks chunks =
-    div [ class "TextChunks" ] (List.map textChunk chunks)
+textChunks : List TextChunk -> Bool -> Html msg
+textChunks chunks light =
+    let
+        modifiers =
+            if light then
+                [ "light", "centred" ]
+
+            else
+                []
+    in
+    mblock modifiers "TextChunks" (List.map textChunk chunks)
 
 
 error : Maybe Http.Error -> String

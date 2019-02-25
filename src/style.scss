@@ -231,7 +231,7 @@ body {
         text-align: center;
     }
     width: 100vw;
-    height: 100vh; // background: url("../assets/confetti.svg") bottom center no-repeat;
+    height: 100vh;
     background-size: 50vw 50vw;
     &__ConfettiContainer {
         position: fixed;
@@ -240,6 +240,19 @@ body {
     }
     &__Avatars {
         margin-top: 1rem;
+    }
+    &__Overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("../assets/confetti.svg") bottom center no-repeat rgba(0, 0, 0, 0.92);
+        background-size: 100vh;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
 
@@ -300,6 +313,7 @@ $size: 3.1rem;
         span {
             text-align: center;
             padding-left: .5rem;
+            padding-right: .5rem;
         }
     }
     img {

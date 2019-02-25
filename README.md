@@ -10,6 +10,9 @@ On the one hand, [Redux](https://redux.js.org/introduction/prior-art#elm) and [R
 
 The experiment was successful and we have `two thanksy clients` with the same set of functionalities.
 
+![elm thanksy client](assets/newThx.png)
+
+
 ## Setup
 
 Install npm packages:
@@ -33,3 +36,4 @@ Bundle files for production:
 ```bash
 npm run build # it transpiles all your Elm and ts into dist/index.bundle.js
 ```
+![elm thanksy client](assets/thxList.png)

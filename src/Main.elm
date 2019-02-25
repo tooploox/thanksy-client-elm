@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Browser
 import Commands exposing (Msg(..), getFeed, getThxUpdateCmd, subscriptions)
-import Components exposing (error, login, thxList)
+import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
 import Http
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
@@ -42,25 +42,15 @@ main =
         }
 
 
-viewThxList : Model -> Html Msg
-viewThxList model =
-    div [] [ thxList model.thxList, text (error model.error) ]
-
-
-viewLogin : Model -> Html Msg
-viewLogin model =
-    div [] [ thxList model.thxList, text (error model.error) ]
-
-
 view : Model -> Browser.Document Msg
 view model =
     { body =
-        [ if String.length model.token < 5 then
-            login model.token ""
+        case List.head model.thxList of
+            Nothing ->
+                [ login model.token "" ]
 
-          else
-            viewThxList model
-        ]
+            Just t ->
+                [ thxList model.thxList ]
     , title = "Thanksy - We want people to be appreciated"
     }
 

@@ -1,4 +1,4 @@
-module Bem exposing (bind, mbind)
+module Bem exposing (bind, mbind, mblock)
 
 import Basics
 import Html exposing (..)
@@ -32,9 +32,14 @@ element name =
     \p -> div [ name ++ "__" ++ p |> class ]
 
 
+mblock : List String -> String -> Block msg
+mblock modifiers name =
+    div [ blockClass modifiers name |> class ]
+
+
 mbind : List String -> String -> ( Block msg, Element msg, ElementText msg )
 mbind modifiers name =
-    ( div [ class (blockClass modifiers name) ]
+    ( mblock modifiers name
     , element name
     , \p -> \txt -> element name p [ text txt ]
     )
