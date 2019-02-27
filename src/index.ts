@@ -9,7 +9,7 @@ export const TOKEN_KEY = "ThanksyToken"
 
 const init = () => {
     const flags = { token: localStorage.getItem(TOKEN_KEY) || "", apiUrl: process.env.API_URL || "" }
-    const isProd = process.env.MODE === "prod"
+    const isProd = process.env.MODE === "production"
 
     const app = (isProd ? ElmProd.MainProd : ElmDev.MainDev).init({ flags })
     if (!isProd) elmMonitor()

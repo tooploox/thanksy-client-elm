@@ -26,7 +26,9 @@ then copy `.env-example` to `.env`:
 cp .env-example .env
 ```
 
-Start a local dev server
+hint: If `MODE` .env variable equals to `production` no [elm-monitor](https://github.com/layflags/elm-monitor) will be used.
+
+Start a local dev server with:
 
 ```bash
 npm start
