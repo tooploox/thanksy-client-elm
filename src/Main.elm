@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module Main exposing (Flags, Model, config)
 
 import Browser
 import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateThxSub)
@@ -7,6 +7,20 @@ import Html exposing (..)
 import Http exposing (Error(..))
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, filterRecentThxList, filterThxList, updateThxList)
 import Monitor
+
+
+config :
+    { init : Flags -> ( Model, Cmd Msg )
+    , view : Model -> Browser.Document Msg
+    , update : Msg -> Model -> ( Model, Cmd Msg )
+    , subscriptions : Model -> Sub Msg
+    }
+config =
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    }
 
 
 type alias Model =
@@ -41,17 +55,6 @@ initialModel =
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { initialModel | token = flags.token, apiUrl = flags.apiUrl }, getFeed flags.apiUrl flags.token )
-
-
-main : Program Flags Model Msg
-main =
-    --  Browser.document
-    Monitor.document
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
 
 
 toError : Model -> String

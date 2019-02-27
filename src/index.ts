@@ -1,4 +1,5 @@
-import { Elm } from "./Main"
+import { Elm as ElmDev } from "./MainDev"
+import { Elm as ElmProd } from "./MainProd"
 import { toChunks, setThxUrls } from "./emoji"
 import * as elmMonitor from "elm-monitor"
 
@@ -10,7 +11,10 @@ const init = () => {
     elmMonitor()
     const token = localStorage.getItem(TOKEN_KEY) || ""
     const apiUrl = process.env.API_URL || ""
-    const app = Elm.Main.init({ flags: { token, apiUrl } })
+    const mode = process.env.MODE || "dev"
+    // tslint:disable-next-line
+    console.log(`Running in ${mode} mode`)
+    const app = (mode === "dev" ? ElmDev.MainDev : ElmProd.MainProd).init({ flags: { token, apiUrl } })
 
     app.ports.getThxUpdate.subscribe(async d => {
         const withUrls = await setThxUrls(toChunks(d))

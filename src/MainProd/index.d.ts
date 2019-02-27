@@ -3,7 +3,7 @@
 // Type definitions for Elm ports
 
 export namespace Elm {
-  namespace Main {
+  namespace MainProd {
     export interface App {
       ports: {
         getThxUpdate: {
@@ -20,6 +20,6 @@ export namespace Elm {
     export function init(options: {
       node?: HTMLElement | null;
       flags: { token: string; apiUrl: string };
-    }): Elm.Main.App;
+    }): Elm.MainProd.App;
   }
 }
