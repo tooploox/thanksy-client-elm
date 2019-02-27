@@ -31,21 +31,35 @@ login token err =
         ]
 
 
-newThx : Thx -> Html msg
-newThx t =
+newThx : List Thx -> Html msg
+newThx ts =
     let
+        modifiers =
+            case List.head ts of
+                Nothing ->
+                    [ "hidden" ]
+
+                _ ->
+                    [ "visible" ]
+
         ( block, element, elementTxt ) =
-            bind "NewThx"
+            mbind modifiers "NewThx"
     in
     block
         [ element "Overlay"
-            [ element "ContentLimiter"
-                [ h2 [] [ text (firstWord t.giver.realName ++ " just sent a new Thanks!") ]
-                , textChunks t.chunks True
-                , element "Avatars" [ avatars t.receivers 11 ]
-                , element "ConfettiContainer" []
-                ]
-            ]
+            (case List.head ts of
+                Nothing ->
+                    []
+
+                Just t ->
+                    [ element "ContentLimiter"
+                        [ h2 [] [ text (firstWord t.giver.realName ++ " just sent a new Thanks!") ]
+                        , textChunks t.chunks True
+                        , element "Avatars" [ avatars t.receivers 11 ]
+                        , element "ConfettiContainer" []
+                        ]
+                    ]
+            )
         ]
 
 

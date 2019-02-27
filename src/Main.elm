@@ -5,6 +5,7 @@ import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpda
 import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
 import Http exposing (Error(..))
+import List.Extra
 import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, filterRecentThxList, filterThxList, updateThxList)
 import Monitor
 
@@ -77,7 +78,7 @@ view model =
                 [ login model.token (toError model) ]
 
             Just t ->
-                [ thxList model.thxList ]
+                [ thxList model.thxList, newThx model.recentThxList ]
     , title = "Thanksy - We want people to be appreciated"
     }
 
@@ -86,7 +87,7 @@ updateThxLists : Model -> List Thx -> Model
 updateThxLists model ts =
     let
         newLastThxId =
-            case ( model.lastThxId, List.head ts ) of
+            case ( model.lastThxId, List.Extra.getAt 1 ts ) of
                 ( Nothing, Just t ) ->
                     Just t.id
 

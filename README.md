@@ -8,7 +8,7 @@ Nevertheless, this is a [thanksy client](https://tooploox.github.io/thanksy/) wr
 
 On the one hand, [Redux](https://redux.js.org/introduction/prior-art#elm) and [Redux loop](https://redux-loop.js.org/) have been highly inspired by the Elm Architecture. On the other hand, we love React's `Functional components` and algebraic data types implemented in Typescript. All that made that rewriting process pretty easy. Text parsing algorithm that splits texts into an array of chunks was taken from the [original project](https://github.com/tooploox/thanksy-client-ts) and `ports` were used to communicate with the Elm world.
 
-The experiment was successful and we have `two thanksy clients` with the same set of functionalities.
+The experiment was successful and this our `thanky client` has now the same set of functionalities as the typescript/react one, feel free to compare those two.
 
 ![elm thanksy client](assets/newThx.png)
 
@@ -43,3 +43,7 @@ Bundle files for production:
 ```bash
 npm run build # it transpiles all your Elm and ts into dist/index.bundle.js
 ```
+
+## License
+
+MIT License

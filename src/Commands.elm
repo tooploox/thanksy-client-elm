@@ -31,7 +31,7 @@ getFeed apiUrl token =
 
 getFeedSub : String -> Sub Msg
 getFeedSub token =
-    every 30000 (\_ -> Load)
+    every 3000 (\_ -> Load)
 
 
 port getThxUpdate : ThxPartialRaw -> Cmd msg
