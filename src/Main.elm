@@ -5,11 +5,14 @@ import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpda
 import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
 import Http exposing (Error(..))
-import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, updateThxList)
+import Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, filterRecentThxList, filterThxList, updateThxList)
+import Monitor
 
 
 type alias Model =
     { thxList : List Thx
+    , recentThxList : List Thx
+    , lastThxId : Maybe Int
     , token : String
     , isTokenFresh : Bool
     , apiUrl : String
@@ -25,6 +28,8 @@ type alias Flags =
 initialModel : Model
 initialModel =
     { thxList = []
+    , recentThxList = []
+    , lastThxId = Nothing
     , token = ""
     , isTokenFresh = True
     , apiState = Empty
@@ -40,7 +45,8 @@ init flags =
 
 main : Program Flags Model Msg
 main =
-    Browser.document
+    --  Browser.document
+    Monitor.document
         { init = init
         , view = view
         , update = update
@@ -73,6 +79,29 @@ view model =
     }
 
 
+updateThxLists : Model -> List Thx -> Model
+updateThxLists model ts =
+    let
+        newLastThxId =
+            case ( model.lastThxId, List.head ts ) of
+                ( Nothing, Just t ) ->
+                    Just t.id
+
+                ( Nothing, Nothing ) ->
+                    Nothing
+
+                _ ->
+                    model.lastThxId
+    in
+    { model
+        | thxList = filterThxList model.lastThxId ts
+        , recentThxList = filterRecentThxList model.lastThxId ts
+        , lastThxId = newLastThxId
+        , apiState = Empty
+        , isTokenFresh = False
+    }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -90,13 +119,18 @@ update msg model =
                 ( model, Cmd.none )
 
         ListLoaded (Ok thxList) ->
-            ( { model | thxList = thxList, apiState = Empty, isTokenFresh = False }, Cmd.batch (List.map getThxUpdateCmd thxList) )
+            ( updateThxLists model thxList, Cmd.batch (List.map getThxUpdateCmd thxList) )
 
         ListLoaded (Err err) ->
             ( { model | isTokenFresh = False, thxList = [], apiError = Just err, apiState = toApiState err }, Cmd.none )
 
         ThxUpdated (Ok thxPartial) ->
-            ( { model | thxList = updateThxList thxPartial model.thxList }, Cmd.none )
+            ( { model
+                | thxList = updateThxList thxPartial model.thxList
+                , recentThxList = updateThxList thxPartial model.recentThxList
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )

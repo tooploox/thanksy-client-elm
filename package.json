@@ -13,6 +13,7 @@
     "elm": "0.19.0-bugfix6",
     "elm-format": "^0.8.1",
     "elm-hot-webpack-loader": "1.0.2",
+    "elm-monitor": "0.0.7",
     "elm-typescript-interop": "0.0.15",
     "elm-webpack-loader": "5.0.0",
     "emoji-regex": "7.0.3",
@@ -26,6 +27,7 @@
     "style-loader": "0.23.1",
     "ts-loader": "5.3.3",
     "ts-node": "8.0.2",
+    "tslint": "^5.13.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-consistent-codestyle": "1.15.0",
     "twemoji": "11.3.0",
@@ -41,6 +43,7 @@
     "gen-types": "npx elm-typescript-interop",
     "start": "npx elm-typescript-interop && webpack-serve --open",
     "build": "./build.sh",
+    "lint":"npx tslint --project tsconfig.json",
     "fake-api": "npx json-server --watch ./test/db.json --middlewares ./test/auth.js --routes ./test/routes.json"
   },
   "repository": {

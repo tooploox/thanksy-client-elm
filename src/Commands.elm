@@ -31,7 +31,7 @@ getFeed apiUrl token =
 
 getFeedSub : String -> Sub Msg
 getFeedSub token =
-    every 4000 (\_ -> Load)
+    every 30000 (\_ -> Load)
 
 
 port getThxUpdate : ThxPartialRaw -> Cmd msg
@@ -47,7 +47,7 @@ port updateThx : (Decode.Value -> msg) -> Sub msg
 
 updateThxSub : Sub Msg
 updateThxSub =
-    updateThx (\v -> v |> decodeValue partialThxDecoder |> ThxUpdated)
+    updateThx (\v -> decodeValue partialThxDecoder v |> ThxUpdated)
 
 
 type ApiState

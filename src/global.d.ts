@@ -11,3 +11,8 @@ type ThxPartial = {
 }
 
 type ThxPartialRaw = { id: number; createdAt: string; body: string }
+
+declare module "elm-monitor" {
+    const install: () => any
+    export = install
+}

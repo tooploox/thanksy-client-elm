@@ -1,4 +1,4 @@
-port module Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, partialThxDecoder, thxDecoder, updateThxList)
+port module Models exposing (TextChunk(..), Thx, ThxPartial, ThxPartialRaw, User, filterRecentThxList, filterThxList, partialThxDecoder, thxDecoder, updateThxList)
 
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
 import Json.Decode.Pipeline exposing (custom, hardcoded, required)
@@ -111,3 +111,37 @@ updateThx p item =
 updateThxList : ThxPartial -> List Thx -> List Thx
 updateThxList partial thxList =
     thxList |> List.map (updateThx partial)
+
+
+thxComparison : Thx -> Thx -> Order
+thxComparison a b =
+    if a.id >= b.id then
+        LT
+
+    else if a.id == b.id then
+        EQ
+
+    else
+        GT
+
+
+filterThxList : Maybe Int -> List Thx -> List Thx
+filterThxList lastThxId ts =
+    List.sortWith thxComparison <|
+        case lastThxId of
+            Nothing ->
+                ts
+
+            Just id ->
+                List.filter (\v -> v.id <= id) ts
+
+
+filterRecentThxList : Maybe Int -> List Thx -> List Thx
+filterRecentThxList lastThxId ts =
+    List.sortWith thxComparison <|
+        case lastThxId of
+            Nothing ->
+                []
+
+            Just id ->
+                List.filter (\v -> v.id > id) ts
