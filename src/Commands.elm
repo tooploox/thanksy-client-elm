@@ -1,4 +1,4 @@
-port module Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateThxSub)
+port module Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateNewThxSub, updateThxSub)
 
 import Http exposing (Error(..), Response, get)
 import Json.Decode as Decode exposing (Decoder, Value, decodeValue, field, int, list, string)
@@ -9,6 +9,7 @@ import Time exposing (every)
 
 type Msg
     = Load
+    | TickLastId
     | TokenChanged String
     | Login
     | ListLoaded (Result Error (List Thx))
@@ -31,7 +32,12 @@ getFeed apiUrl token =
 
 getFeedSub : String -> Sub Msg
 getFeedSub token =
-    every 3000 (\_ -> Load)
+    every 10000 (\_ -> Load)
+
+
+updateNewThxSub : Sub Msg
+updateNewThxSub =
+    every 9000 (\_ -> TickLastId)
 
 
 port getThxUpdate : ThxPartialRaw -> Cmd msg

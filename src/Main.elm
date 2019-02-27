@@ -1,7 +1,7 @@
 port module Main exposing (Flags, Model, config)
 
 import Browser
-import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateThxSub)
+import Commands exposing (ApiState(..), Msg(..), getFeed, getFeedSub, getThxUpdateCmd, setToken, toApiState, updateNewThxSub, updateThxSub)
 import Components exposing (error, login, newThx, thxList)
 import Html exposing (..)
 import Http exposing (Error(..))
@@ -108,6 +108,10 @@ updateThxLists model ts =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        id =
+            ( model, Cmd.none )
+    in
     case msg of
         TokenChanged token ->
             ( { model | token = token, isTokenFresh = True }, setToken token )
@@ -120,7 +124,17 @@ update msg model =
                 ( { model | isTokenFresh = False }, getFeed model.apiUrl model.token )
 
             else
-                ( model, Cmd.none )
+                id
+
+        TickLastId ->
+            case model.lastThxId of
+                Just _ ->
+                    ( updateThxLists model (List.append model.recentThxList model.thxList)
+                    , Cmd.none
+                    )
+
+                _ ->
+                    id
 
         ListLoaded (Ok thxList) ->
             ( updateThxLists model thxList, Cmd.batch (List.map getThxUpdateCmd thxList) )
@@ -137,7 +151,7 @@ update msg model =
             )
 
         _ ->
-            ( model, Cmd.none )
+            id
 
 
 subscriptions : Model -> Sub Msg
@@ -145,4 +159,5 @@ subscriptions model =
     Sub.batch
         [ updateThxSub
         , getFeedSub model.token
+        , updateNewThxSub
         ]
