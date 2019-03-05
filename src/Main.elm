@@ -77,7 +77,7 @@ view model =
             Nothing ->
                 [ login model.token (toError model) ]
 
-            Just t ->
+            _ ->
                 [ thxList model.thxList, newThx model.recentThxList ]
     , title = "Thanksy - We want people to be appreciated"
     }

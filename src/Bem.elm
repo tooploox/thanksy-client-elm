@@ -1,49 +1,39 @@
-module Bem exposing (bind, mbind, mblock)
+module Bem exposing (bind)
 
-import Basics
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import String exposing (join, toLower)
-
-
-type alias Block msg =
-    List (Html msg) -> Html msg
+import Html exposing (Attribute)
+import Html.Attributes exposing (class)
+import List exposing (map)
+import String exposing (join)
 
 
-type alias Element msg =
-    String -> List (Html msg) -> Html msg
+applyModifier : String -> String -> String
+applyModifier base modifier =
+    join "--" [ base, modifier ]
 
 
-type alias ElementText msg =
-    String -> String -> Html msg
-
-
-blockClass : List String -> String -> String
-blockClass modifiers block =
+className : String -> List String -> String
+className base modifiers =
     let
-        className =
-            \m -> join "--" [ block, m ]
+        apply =
+            applyModifier base
     in
-    block ++ " " ++ (List.map className modifiers |> join " ") |> String.trim
+    modifiers
+        |> map apply
+        |> (::) base
+        |> join " "
 
 
-element : String -> Element msg
-element name =
-    \p -> div [ name ++ "__" ++ p |> class ]
+bind : String -> ( List String -> Attribute msg, String -> List String -> Attribute msg )
+bind bName =
+    let
+        bClass modifiers =
+            className bName modifiers
+                |> class
 
-
-mblock : List String -> String -> Block msg
-mblock modifiers name =
-    div [ blockClass modifiers name |> class ]
-
-
-mbind : List String -> String -> ( Block msg, Element msg, ElementText msg )
-mbind modifiers name =
-    ( mblock modifiers name
-    , element name
-    , \p -> \txt -> element name p [ text txt ]
+        eClass eName modifiers =
+            className (join "__" [ bName, eName ]) modifiers
+                |> class
+    in
+    ( bClass
+    , eClass
     )
-
-
-bind =
-    mbind []

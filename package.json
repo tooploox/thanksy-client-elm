@@ -39,7 +39,7 @@
     "gen-types": "npx elm-typescript-interop",
     "start": "npx elm-typescript-interop && webpack-serve --open",
     "build": "./build.sh",
-    "test" : "npx elm-test",
+    "test": "npx elm-test",
     "lint": "npx tslint --project tsconfig.json",
     "fake-api": "npx json-server --watch ./tests/db.json --middlewares ./tests/auth.js --routes ./tests/routes.json"
   },
@@ -59,6 +59,5 @@
     "tslint": "^5.13.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-consistent-codestyle": "1.15.0"
-
   }
 }

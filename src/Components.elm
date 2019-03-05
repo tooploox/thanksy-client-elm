@@ -1,6 +1,6 @@
 module Components exposing (error, login, newThx, thxList)
 
-import Bem exposing (bind, mbind, mblock)
+import Bem exposing (..)
 import Commands exposing (Msg(..), getFeed)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
@@ -15,19 +15,19 @@ import String.Extra exposing (softBreak)
 login : String -> String -> Html Msg
 login token err =
     let
-        ( block, element, elementTxt ) =
+        ( iBlock, isElement ) =
             bind "Login"
     in
-    block
-        [ element "ContentLimiter"
-            [ element "Logo" []
-            , elementTxt "Mission" "Improving your company's culture"
+    div [ iBlock [] ]
+        [ div [ isElement "ContentLimiter" [] ]
+            [ div [ isElement "Logo" [] ] []
+            , div [ isElement "Mission" [] ] [ text "Improving your company's culture" ]
             , input [ placeholder "Security code", value token, onInput TokenChanged ] []
-            , elementTxt "Error" err
+            , div [ isElement "Error" [] ] [ text err ]
             , p [] [ text "Ask a person who has deployed Thanksy on the server about the security code" ]
             , button [ onClick Login ] [ text "Login" ]
             ]
-        , element "Blur" []
+        , div [ isElement "Blur" [] ] []
         ]
 
 
@@ -42,21 +42,21 @@ newThx ts =
                 _ ->
                     [ "visible" ]
 
-        ( block, element, elementTxt ) =
-            mbind modifiers "NewThx"
+        ( isBlock, isElement ) =
+            bind "NewThx"
     in
-    block
-        [ element "Overlay"
+    div [ isBlock modifiers ]
+        [ div [ isElement "Overlay" [] ]
             (case List.head ts of
                 Nothing ->
                     []
 
                 Just t ->
-                    [ element "ContentLimiter"
+                    [ div [ isElement "ContentLimiter" [] ]
                         [ h2 [] [ text (firstWord t.giver.realName ++ " just sent a new Thanks!") ]
                         , textChunks t.chunks True
-                        , element "Avatars" [ avatars t.receivers 11 ]
-                        , element "ConfettiContainer" []
+                        , div [ isElement "Avatars" [] ] [ avatars t.receivers 11 ]
+                        , div [ isElement "ConfettiContainer" [] ] []
                         ]
                     ]
             )
@@ -66,21 +66,21 @@ newThx ts =
 thxList : List Thx -> Html msg
 thxList ts =
     let
-        ( block, element, elementTxt ) =
+        ( isBlock, isElement ) =
             bind "ThxList"
     in
-    block
+    div [ isBlock [] ]
         (if List.isEmpty ts then
-            [ element "EmptyContainer"
-                [ element "Empty" []
-                , elementTxt "Title" "No thanks so far"
-                , elementTxt "Subtitle" "Be the first one, use Slack, speak up!"
+            [ div [ isElement "EmptyContainer" [] ]
+                [ div [ isElement "Empty" [] ] []
+                , div [ isElement "Title" [] ] [ text "No thanks so far" ]
+                , div [ isElement "Subtitle" [] ] [ text "Be the first one, use Slack, speak up!" ]
                 ]
             ]
 
          else
             [ h1 [] [ text "Recent thanks" ]
-            , element "Container" (List.map thx ts)
+            , div [ isElement "Container" [] ] (List.map thx ts)
             ]
         )
 
@@ -88,12 +88,15 @@ thxList ts =
 thx : Thx -> Html msg
 thx t =
     let
-        ( block, element, elementTxt ) =
+        ( isBlock, isElement ) =
             bind "Thx"
     in
-    div [ class "Thx", Attr.id ("thx" ++ String.fromInt t.id) ]
+    div
+        [ isBlock []
+        , Attr.id <| "thx" ++ String.fromInt t.id
+        ]
         [ userHeader t.giver t.createdAt
-        , element "Content"
+        , div [ isElement "Content" [] ]
             [ textChunks t.chunks False
             , avatars t.receivers 5
             , reactions t
@@ -104,15 +107,15 @@ thx t =
 userHeader : User -> String -> Html msg
 userHeader u createdAt =
     let
-        ( block, element, elementTxt ) =
+        ( isBlock, isElement ) =
             bind "UserHeader"
     in
-    block
-        [ element "Avatar"
+    div [ isBlock [] ]
+        [ div [ isElement "Avatar" [] ]
             [ img [ Attr.src u.avatarUrl ] [] ]
-        , element "Details"
-            [ elementTxt "Name" u.realName
-            , elementTxt "Time" createdAt
+        , div [ isElement "Details" [] ]
+            [ div [ isElement "Name" [] ] [ text u.realName ]
+            , div [ isElement "Time" [] ] [ text createdAt ]
             ]
         ]
 
@@ -120,12 +123,12 @@ userHeader u createdAt =
 reaction : String -> Int -> Html msg
 reaction kind count =
     let
-        ( block, element, elementTxt ) =
-            mbind [ kind ] "Reaction"
+        ( isBlock, isElement ) =
+            bind "Reaction"
     in
-    block
-        [ element "Icon" []
-        , elementTxt "Count" (String.fromInt count)
+    div [ isBlock [ kind ] ]
+        [ div [ isElement "Icon" [] ] []
+        , div [ isElement "Count" [] ] [ text <| String.fromInt count ]
         ]
 
 
@@ -147,7 +150,7 @@ avatar u =
 avatars : List User -> Int -> Html msg
 avatars us max =
     let
-        ( block, element, _ ) =
+        ( isBlock, isElement ) =
             bind "Avatars"
 
         elements =
@@ -155,8 +158,8 @@ avatars us max =
                 |> reverse
                 |> List.map avatar
     in
-    block
-        [ element "Container" elements ]
+    div [ isBlock [] ]
+        [ div [ isElement "Container" [] ] elements ]
 
 
 textChunk : TextChunk -> Html msg
@@ -181,8 +184,11 @@ textChunks chunks light =
 
             else
                 []
+
+        ( isBlock, _ ) =
+            bind "TextChunks"
     in
-    mblock modifiers "TextChunks" (List.map textChunk chunks)
+    div [ isBlock modifiers ] <| List.map textChunk chunks
 
 
 error : Maybe Http.Error -> String
